@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="620" viewBox="0 0 1600 620">
+<defs>
+  <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#0b1220"/>
+    <stop offset="55%" stop-color="#172554"/>
+    <stop offset="100%" stop-color="#312e81"/>
+  </linearGradient>
+  <radialGradient id="r" cx="80%" cy="20%" r="70%">
+    <stop offset="0%" stop-color="#7c3aed" stop-opacity=".35"/>
+    <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+  </radialGradient>
+</defs>
+<rect width="1600" height="620" fill="url(#g)"/>
+<rect width="1600" height="620" fill="url(#r)"/>
+<g opacity=".12" stroke="#fff">
+  <path d="M0 500 H1600"/><path d="M0 420 H1600"/><path d="M0 340 H1600"/>
+  <path d="M250 0 V620"/><path d="M500 0 V620"/><path d="M750 0 V620"/><path d="M1000 0 V620"/><path d="M1250 0 V620"/><path d="M1500 0 V620"/>
+</g>
+<circle cx="1330" cy="150" r="96" fill="none" stroke="#93c5fd" stroke-width="3" opacity=".55"/>
+<circle cx="1330" cy="150" r="66" fill="none" stroke="#c4b5fd" stroke-width="3" opacity=".75"/>
+<path d="M1295 150 L1320 175 L1370 120" fill="none" stroke="#86efac" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="110" y="155" fill="#bfdbfe" font-family="Arial" font-size="24" font-weight="700">AI REVENUE RECOVERY</text>
+<text x="110" y="225" fill="#ffffff" font-family="Arial" font-size="62" font-weight="800">AI Payment Resolver</text>
+<text x="110" y="275" fill="#cbd5e1" font-family="Arial" font-size="25">Resolve ambiguity. Recover safely. Prove every decision.</text>
+<rect x="110" y="335" width="510" height="70" rx="35" fill="#0f172a" stroke="#475569"/>
+<text x="365" y="380" text-anchor="middle" fill="#f8fafc" font-family="Arial" font-size="22">AI explains • Policy decides • Safety vetoes</text>
+<text x="110" y="500" fill="#94a3b8" font-family="Arial" font-size="19">50 synthetic scenarios • 164 tests • 12 safety invariants • idempotent replay</text>
+<text x="110" y="545" fill="#94a3b8" font-family="Arial" font-size="17">Razorpay AI Buildathon 2026 · Track 03: AI Revenue Recovery</text>
+</svg>

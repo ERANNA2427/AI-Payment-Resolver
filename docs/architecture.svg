@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="820" viewBox="0 0 1400 820">
+<defs>
+  <linearGradient id="bg" x1="0" x2="1">
+    <stop offset="0%" stop-color="#0b1220"/>
+    <stop offset="100%" stop-color="#111827"/>
+  </linearGradient>
+  <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="12" flood-opacity=".25"/></filter>
+  <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+    <path d="M0,0 L10,3 L0,6 Z" fill="#94a3b8"/>
+  </marker>
+</defs>
+
+<rect width="1400" height="820" fill="url(#bg)"/>
+<text x="70" y="70" fill="#fff" font-size="34" font-family="Arial" font-weight="700">AI Payment Resolver</text>
+<text x="70" y="105" fill="#94a3b8" font-size="18" font-family="Arial">AI-assisted revenue recovery with deterministic financial authority</text>
+
+<!-- Main pipeline -->
+<g font-family="Arial" filter="url(#shadow)">
+  <rect x="70" y="180" width="190" height="100" rx="18" fill="#172554" stroke="#60a5fa" stroke-width="2"/>
+  <text x="165" y="220" text-anchor="middle" fill="#bfdbfe" font-size="16">1</text>
+  <text x="165" y="248" text-anchor="middle" fill="#fff" font-size="20" font-weight="700">EVENTS</text>
+  <text x="165" y="270" text-anchor="middle" fill="#cbd5e1" font-size="13">raw payment signals</text>
+
+  <rect x="310" y="180" width="190" height="100" rx="18" fill="#172554" stroke="#60a5fa" stroke-width="2"/>
+  <text x="405" y="220" text-anchor="middle" fill="#bfdbfe" font-size="16">2</text>
+  <text x="405" y="248" text-anchor="middle" fill="#fff" font-size="20" font-weight="700">RESOLVER</text>
+  <text x="405" y="270" text-anchor="middle" fill="#cbd5e1" font-size="13">deterministic state</text>
+
+  <rect x="550" y="180" width="190" height="100" rx="18" fill="#172554" stroke="#60a5fa" stroke-width="2"/>
+  <text x="645" y="220" text-anchor="middle" fill="#bfdbfe" font-size="16">3</text>
+  <text x="645" y="248" text-anchor="middle" fill="#fff" font-size="20" font-weight="700">POLICY</text>
+  <text x="645" y="270" text-anchor="middle" fill="#cbd5e1" font-size="13">bounded intervention</text>
+
+  <rect x="790" y="180" width="260" height="100" rx="18" fill="#3f1d2e" stroke="#f59e0b" stroke-width="3"/>
+  <text x="920" y="218" text-anchor="middle" fill="#fde68a" font-size="16">4</text>
+  <text x="920" y="247" text-anchor="middle" fill="#fff" font-size="21" font-weight="700">SAFETY GATE</text>
+  <text x="920" y="270" text-anchor="middle" fill="#fde68a" font-size="13">12 invariants • veto power</text>
+
+  <rect x="1100" y="180" width="220" height="100" rx="18" fill="#14532d" stroke="#4ade80" stroke-width="2"/>
+  <text x="1210" y="220" text-anchor="middle" fill="#bbf7d0" font-size="16">5</text>
+  <text x="1210" y="248" text-anchor="middle" fill="#fff" font-size="20" font-weight="700">EXECUTION</text>
+  <text x="1210" y="270" text-anchor="middle" fill="#cbd5e1" font-size="13">simulated • dry-run default</text>
+</g>
+
+<!-- Arrows -->
+<g stroke="#94a3b8" stroke-width="3" fill="none" marker-end="url(#arrow)">
+  <path d="M260 230 H305"/>
+  <path d="M500 230 H545"/>
+  <path d="M740 230 H785"/>
+  <path d="M1050 230 H1095"/>
+</g>
+
+<!-- AI advisory -->
+<rect x="470" y="370" width="460" height="145" rx="20" fill="#1e1b4b" stroke="#a78bfa" stroke-width="2" filter="url(#shadow)"/>
+<text x="700" y="408" text-anchor="middle" fill="#ddd6fe" font-size="16" font-family="Arial">ADVISORY PATH — NO FINANCIAL AUTHORITY</text>
+<text x="700" y="442" text-anchor="middle" fill="#fff" font-size="23" font-family="Arial" font-weight="700">AI Advisor → Validator → Fallback</text>
+<text x="700" y="474" text-anchor="middle" fill="#cbd5e1" font-size="14" font-family="Arial">reason normalization • recovery copy • human-review summaries</text>
+<text x="700" y="498" text-anchor="middle" fill="#a78bfa" font-size="13" font-family="Arial">allowlist + confidence floor</text>
+
+<path d="M645 280 C645 330 700 345 700 365" stroke="#a78bfa" stroke-width="3" fill="none" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
+<path d="M700 515 C700 550 920 550 920 285" stroke="#a78bfa" stroke-width="3" fill="none" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
+
+<!-- Veto -->
+<rect x="780" y="590" width="270" height="100" rx="18" fill="#450a0a" stroke="#fb7185" stroke-width="2" filter="url(#shadow)"/>
+<text x="915" y="625" text-anchor="middle" fill="#fecdd3" font-size="16" font-family="Arial">SAFETY VETO</text>
+<text x="915" y="653" text-anchor="middle" fill="#fff" font-size="20" font-family="Arial" font-weight="700">HUMAN_REVIEW</text>
+<text x="915" y="675" text-anchor="middle" fill="#fecdd3" font-size="13" font-family="Arial">no unsafe money movement</text>
+
+<path d="M920 280 V585" stroke="#fb7185" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+<!-- Audit -->
+<rect x="1100" y="590" width="220" height="100" rx="18" fill="#0f172a" stroke="#cbd5e1" stroke-width="2" filter="url(#shadow)"/>
+<text x="1210" y="625" text-anchor="middle" fill="#e2e8f0" font-size="16" font-family="Arial">EVIDENCE</text>
+<text x="1210" y="653" text-anchor="middle" fill="#fff" font-size="20" font-family="Arial" font-weight="700">AUDIT + METRICS</text>
+<text x="1210" y="675" text-anchor="middle" fill="#cbd5e1" font-size="13" font-family="Arial">append-only • replayable</text>
+
+<path d="M1210 280 V585" stroke="#94a3b8" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<path d="M1050 640 H1095" stroke="#94a3b8" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+
+<text x="70" y="755" fill="#94a3b8" font-size="15" font-family="Arial">Synthetic data • integer minor units • stdlib runtime • simulated gateway</text>
+</svg>
