@@ -1,0 +1,5 @@
+# AI-Payment-Resolver — minimal dependencies
+# Runtime: Python 3.14 standard library only (no third-party runtime deps).
+# The only external dependency is pytest, used for the test/CI suite.
+
+pytest>=9.0

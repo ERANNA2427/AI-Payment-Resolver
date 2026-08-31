@@ -1,0 +1,11 @@
+[project]
+name = "ai-payment-resolver"
+version = "0.1.0"
+description = "AI-assisted payment revenue recovery engine (Razorpay AI Buildathon, Track 03: AI Revenue Recovery)"
+requires-python = ">=3.14"
+dependencies = ["pytest>=9.0"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["backend/tests"]
+addopts = "-q"
