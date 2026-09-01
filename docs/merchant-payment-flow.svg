@@ -1,0 +1,142 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="520" viewBox="0 0 920 520">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 22px; font-weight: 700; fill: #0f172a; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 13px; fill: #64748b; }
+      .card-title { font-family: Arial, sans-serif; font-size: 13px; font-weight: 700; fill: #1e293b; }
+      .card-text { font-family: Arial, sans-serif; font-size: 11px; fill: #475569; }
+      .label { font-family: Arial, sans-serif; font-size: 12px; fill: #334155; }
+      .small { font-family: Arial, sans-serif; font-size: 10px; fill: #64748b; }
+      .outcome { font-family: Arial, sans-serif; font-size: 10px; font-weight: 600; fill: #1e293b; }
+      .footer { font-family: Arial, sans-serif; font-size: 10px; fill: #94a3b8; }
+      .card { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1.5; }
+      .card-blue { fill: #eff6ff; stroke: #93c5fd; stroke-width: 1.5; }
+      .card-green { fill: #f0fdf4; stroke: #86efac; stroke-width: 1.5; }
+      .card-purple { fill: #faf5ff; stroke: #c4b5fd; stroke-width: 1.5; }
+      .card-amber { fill: #fffbeb; stroke: #fcd34d; stroke-width: 1.5; }
+      .card-teal { fill: #f0fdfa; stroke: #5eead4; stroke-width: 1.5; }
+      .card-merge { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1.5; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L10,3 L0,6 Z" fill="#64748b"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="920" height="520" fill="#f8fafc" rx="12"/>
+
+  <!-- Title -->
+  <text x="30" y="40" class="title">Merchant payment flow</text>
+  <text x="30" y="60" class="subtitle">From customer payment to resolver decision</text>
+
+  <!-- Row 1: Main flow -->
+
+  <!-- 1. Merchant -->
+  <rect x="30" y="90" width="110" height="120" rx="12" class="card-blue"/>
+  <!-- Shop icon -->
+  <rect x="55" y="105" width="60" height="45" rx="4" fill="#bfdbfe"/>
+  <polygon points="55,105 85,88 115,105" fill="#93c5fd"/>
+  <rect x="75" y="130" width="20" height="20" rx="2" fill="#1e40af"/>
+  <text x="85" y="175" class="card-title" text-anchor="middle">Merchant</text>
+  <text x="85" y="193" class="small" text-anchor="middle">online business</text>
+
+  <!-- Arrow -->
+  <line x1="140" y1="150" x2="168" y2="150" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 2. Customers -->
+  <rect x="176" y="90" width="120" height="120" rx="12" class="card"/>
+  <!-- Customer icons -->
+  <circle cx="210" cy="125" r="12" fill="#ddd6fe"/>
+  <rect x="204" y="137" width="12" height="16" rx="3" fill="#a78bfa"/>
+  <circle cx="240" cy="120" r="12" fill="#bfdbfe"/>
+  <rect x="234" y="132" width="12" height="16" rx="3" fill="#60a5fa"/>
+  <circle cx="268" cy="128" r="12" fill="#bbf7d0"/>
+  <rect x="262" y="140" width="12" height="16" rx="3" fill="#4ade80"/>
+  <!-- Phones -->
+  <rect x="206" y="118" width="8" height="14" rx="2" fill="#475569"/>
+  <rect x="236" y="112" width="8" height="14" rx="2" fill="#475569"/>
+  <rect x="264" y="126" width="8" height="14" rx="2" fill="#475569"/>
+  <text x="236" y="175" class="card-title" text-anchor="middle">Customers</text>
+  <text x="236" y="193" class="small" text-anchor="middle">place orders</text>
+
+  <!-- Arrow -->
+  <line x1="296" y1="150" x2="324" y2="150" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 3. Digital Payments -->
+  <rect x="332" y="90" width="130" height="120" rx="12" class="card"/>
+  <text x="397" y="120" class="small" text-anchor="middle">💳 Card</text>
+  <text x="397" y="138" class="small" text-anchor="middle">📱 UPI</text>
+  <text x="397" y="156" class="small" text-anchor="middle">👛 Wallet</text>
+  <text x="397" y="174" class="small" text-anchor="middle">🏦 Net Banking</text>
+  <text x="397" y="195" class="card-title" text-anchor="middle">Digital Payments</text>
+
+  <!-- Arrow -->
+  <line x1="462" y1="150" x2="490" y2="150" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 4. Payment Gateway -->
+  <rect x="498" y="90" width="120" height="120" rx="12" class="card-amber"/>
+  <text x="558" y="130" font-size="24" text-anchor="middle">☁️</text>
+  <text x="558" y="160" class="card-title" text-anchor="middle">Payment</text>
+  <text x="558" y="178" class="card-title" text-anchor="middle">Gateway</text>
+  <text x="558" y="196" class="small" text-anchor="middle">processes payment</text>
+
+  <!-- Arrow -->
+  <line x1="618" y1="150" x2="646" y2="150" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 5. Payment Outcomes -->
+  <rect x="654" y="80" width="120" height="140" rx="12" class="card"/>
+  <text x="714" y="102" class="card-text" text-anchor="middle">✓ success</text>
+  <text x="714" y="118" class="card-text" text-anchor="middle">🔄 duplicate</text>
+  <text x="714" y="134" class="card-text" text-anchor="middle">✗ failed</text>
+  <text x="714" y="150" class="card-text" text-anchor="middle">⏳ pending</text>
+  <text x="714" y="166" class="card-text" text-anchor="middle">⚠️ mismatch</text>
+  <text x="714" y="182" class="card-text" text-anchor="middle">💰 refund</text>
+  <text x="714" y="205" class="card-title" text-anchor="middle">Payment Outcomes</text>
+
+  <!-- Arrow down -->
+  <line x1="714" y1="220" x2="714" y2="258" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- 6. AI Payment Resolver (bottom center) -->
+  <rect x="580" y="270" width="220" height="100" rx="14" class="card-purple"/>
+  <text x="690" y="300" class="card-title" text-anchor="middle">🤖 AI Payment Resolver</text>
+  <text x="690" y="322" class="card-text" text-anchor="middle">deterministic rules decide</text>
+  <text x="690" y="340" class="card-text" text-anchor="middle">AI advises · Safety protects</text>
+  <text x="690" y="360" class="small" text-anchor="middle" fill="#7c3aed">advisory + deterministic + safe</text>
+
+  <!-- Benefits row -->
+  <text x="30" y="300" class="section-title" font-size="14" font-weight="700" fill="#1e293b">Merchant benefits:</text>
+
+  <rect x="30" y="315" width="145" height="65" rx="10" class="card-green"/>
+  <text x="102" y="340" class="card-text" text-anchor="middle">💰 Protect revenue</text>
+  <text x="102" y="358" class="small" text-anchor="middle">from failures &amp; duplicates</text>
+  <text x="102" y="372" class="small" text-anchor="middle">&amp; duplicates</text>
+
+  <rect x="185" y="315" width="145" height="65" rx="10" class="card-teal"/>
+  <text x="257" y="340" class="card-text" text-anchor="middle">⚡ Reduce manual</text>
+  <text x="257" y="358" class="small" text-anchor="middle">investigation</text>
+
+  <rect x="340" y="315" width="145" height="65" rx="10" class="card-blue"/>
+  <text x="412" y="340" class="card-text" text-anchor="middle">🔄 Consistent</text>
+  <text x="412" y="358" class="small" text-anchor="middle">resolution</text>
+
+  <rect x="30" y="390" width="145" height="65" rx="10" class="card-amber"/>
+  <text x="102" y="415" class="card-text" text-anchor="middle">👤 Human control</text>
+  <text x="102" y="433" class="small" text-anchor="middle">for sensitive cases</text>
+
+  <rect x="185" y="390" width="145" height="65" rx="10" class="card"/>
+  <text x="257" y="415" class="card-text" text-anchor="middle">📋 Auditable</text>
+  <text x="257" y="433" class="small" text-anchor="middle">decision records</text>
+
+  <rect x="340" y="390" width="145" height="65" rx="10" class="card-green"/>
+  <text x="412" y="415" class="card-text" text-anchor="middle">🔒 No duplicate</text>
+  <text x="412" y="433" class="small" text-anchor="middle">money movement</text>
+
+  <!-- Disclaimer -->
+  <rect x="500" y="390" width="370" height="65" rx="10" fill="#fefce8" stroke="#fde047" stroke-width="1.5"/>
+  <text x="685" y="415" class="card-text" text-anchor="middle">⚠️ Synthetic data only —</text>
+  <text x="685" y="433" class="card-text" text-anchor="middle">no real customer payments are processed.</text>
+
+  <!-- Footer -->
+  <text x="30" y="480" class="footer">AI Payment Resolver · Razorpay AI Buildathon 2026 · Track 03: AI Revenue Recovery</text>
+  <text x="890" y="480" class="footer" text-anchor="end">Deterministic · Auditable · Safe</text>
+</svg>

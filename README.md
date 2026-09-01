@@ -27,6 +27,38 @@ AI Payment Resolver turns messy, delayed, duplicated, contradictory payment even
 
 ---
 
+## For merchants: what this solves
+
+You run an online business. Your customers pay using cards, UPI, wallets, or net banking. Most payments succeed, but some become ambiguous: a duplicate capture, a payment stuck in pending, a mismatch between the order amount and the gateway report, or a refund that needs validation.
+
+**AI Payment Resolver** takes your payment and gateway information and determines the appropriate next step:
+
+- **Deterministic business rules** classify the payment state and select the intervention. Rules are always authoritative.
+- **The AI layer is advisory only.** It can explain what likely happened, summarize the case, and suggest recovery copy. It cannot select a payment state, choose an intervention, or move money.
+- **A safety gate** checks every proposed action against 12 hard invariants (amount bounds, currency consistency, idempotency, circuit breaker, dry-run enforcement). Unsafe or uncertain cases are escalated to human review.
+- **Every decision is recorded** in an append-only audit trail and can be replayed safely with zero duplicate money movement.
+
+### Merchant benefits
+
+- **Protect revenue** from payment failures and duplicates
+- **Reduce unnecessary manual investigation** with consistent automated resolution
+- **Resolve payment issues consistently** using deterministic rules
+- **Keep humans in control** of sensitive or uncertain cases
+- **Maintain an auditable record** of every decision
+- **Prevent duplicate money movement** through idempotency and safety checks
+
+> This repository uses **deterministic synthetic data** and does not process real customer payments.
+
+![Merchant payment flow](docs/merchant-payment-flow.svg)
+
+---
+
+## For engineers: how it works
+
+![Resolver technical flow](docs/merchant-how-it-works.svg)
+
+---
+
 ## Why this problem matters
 
 Payment failure is rarely a single clean event.

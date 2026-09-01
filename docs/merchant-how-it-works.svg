@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="680" viewBox="0 0 920 680">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 22px; font-weight: 700; fill: #0f172a; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 13px; fill: #64748b; }
+      .card-title { font-family: Arial, sans-serif; font-size: 13px; font-weight: 700; fill: #1e293b; }
+      .card-text { font-family: Arial, sans-serif; font-size: 11px; fill: #475569; }
+      .label { font-family: Arial, sans-serif; font-size: 12px; fill: #334155; }
+      .small { font-family: Arial, sans-serif; font-size: 10px; fill: #64748b; }
+      .intervention { font-family: Arial, sans-serif; font-size: 11px; font-weight: 600; fill: #1e293b; }
+      .message { font-family: Arial, sans-serif; font-size: 15px; font-weight: 700; fill: #1e293b; }
+      .footer { font-family: Arial, sans-serif; font-size: 10px; fill: #94a3b8; }
+      .card { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1.5; }
+      .card-blue { fill: #eff6ff; stroke: #93c5fd; stroke-width: 1.5; }
+      .card-green { fill: #f0fdf4; stroke: #86efac; stroke-width: 1.5; }
+      .card-purple { fill: #faf5ff; stroke: #c4b5fd; stroke-width: 1.5; }
+      .card-amber { fill: #fffbeb; stroke: #fcd34d; stroke-width: 1.5; }
+      .card-teal { fill: #f0fdfa; stroke: #5eead4; stroke-width: 1.5; }
+      .card-red { fill: #fef2f2; stroke: #fca5a5; stroke-width: 1.5; }
+      .card-ai { fill: #f5f3ff; stroke: #d8b4fe; stroke-width: 1.5; stroke-dasharray: 5 3; }
+    </style>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L10,3 L0,6 Z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrowPurple" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L10,3 L0,6 Z" fill="#7c3aed"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L10,3 L0,6 Z" fill="#059669"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="920" height="680" fill="#f8fafc" rx="12"/>
+
+  <!-- Title -->
+  <text x="30" y="40" class="title">How the resolver works</text>
+  <text x="30" y="60" class="subtitle">Payment data flows through rules, AI advice, safety, and audit</text>
+
+  <!-- Main flow - vertical -->
+
+  <!-- 1. Payment Data -->
+  <rect x="350" y="85" width="220" height="70" rx="12" class="card-blue"/>
+  <text x="460" y="112" class="card-title" text-anchor="middle">📊 Payment Data</text>
+  <text x="460" y="132" class="card-text" text-anchor="middle">events, gateway signals, order info</text>
+
+  <!-- Arrow down -->
+  <line x1="460" y1="155" x2="460" y2="183" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <!-- 2. Deterministic Rules -->
+  <rect x="350" y="195" width="220" height="70" rx="12" class="card-blue"/>
+  <text x="460" y="222" class="card-title" text-anchor="middle">⚙️ Deterministic Rules</text>
+  <text x="460" y="242" class="card-text" text-anchor="middle">authoritative state + intervention</text>
+
+  <!-- Arrow down (main flow) -->
+  <line x1="460" y1="265" x2="460" y2="293" stroke="#2563eb" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+  <!-- AI Advisory Layer - side branch -->
+  <rect x="620" y="195" width="200" height="70" rx="12" class="card-ai"/>
+  <text x="720" y="220" class="card-title" text-anchor="middle">🤖 AI Advisory</text>
+  <text x="720" y="238" class="small" text-anchor="middle">explains · summarizes · drafts</text>
+  <text x="720" y="254" class="small" text-anchor="middle" fill="#7c3aed">advisory only</text>
+
+  <!-- Dashed arrow from Rules to AI -->
+  <line x1="570" y1="230" x2="618" y2="230" stroke="#7c3aed" stroke-width="2" stroke-dasharray="6 4"/>
+  <polygon points="618,224 626,230 618,236" fill="#7c3aed"/>
+
+  <!-- Dashed arrow from AI back to main flow -->
+  <path d="M 620 250 C 590 280 570 280 570 280" stroke="#7c3aed" stroke-width="1.5" fill="none" stroke-dasharray="5 3"/>
+  <line x1="570" y1="280" x2="460" y2="280" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="5 3"/>
+
+  <!-- 3. Safety & Compliance Gate -->
+  <rect x="330" y="305" width="260" height="80" rx="14" class="card-green"/>
+  <text x="460" y="330" class="card-title" text-anchor="middle">🛡️ Safety &amp; Compliance Gate</text>
+  <text x="460" y="350" class="small" text-anchor="middle">12 invariants · idempotency · circuit breaker · dry-run</text>
+  <text x="460" y="370" class="label" text-anchor="middle" font-weight="600">veto power on money-moving actions</text>
+
+  <!-- Arrow down -->
+  <line x1="460" y1="385" x2="460" y2="413" stroke="#059669" stroke-width="2" marker-end="url(#arrowGreen)"/>
+
+  <!-- 4. Final Deterministic Action -->
+  <rect x="330" y="425" width="260" height="70" rx="12" class="card-teal"/>
+  <text x="460" y="452" class="card-title" text-anchor="middle">✅ Final Deterministic Action</text>
+  <text x="460" y="472" class="card-text" text-anchor="middle">selected by rules, validated by safety</text>
+
+  <!-- Arrow down -->
+  <line x1="460" y1="495" x2="460" y2="523" stroke="#059669" stroke-width="2" marker-end="url(#arrowGreen)"/>
+
+  <!-- 5. Audit & Replay -->
+  <rect x="330" y="535" width="260" height="60" rx="12" class="card-purple"/>
+  <text x="460" y="560" class="card-title" text-anchor="middle">📋 Audit Trail &amp; Replay</text>
+  <text x="460" y="580" class="small" text-anchor="middle">append-only record · zero duplicate actions on replay</text>
+
+  <!-- Example interventions - left side -->
+  <text x="50" y="445" class="label" font-weight="600">Example actions:</text>
+
+  <rect x="50" y="458" width="200" height="28" rx="6" fill="#f0fdf4" stroke="#86efac" stroke-width="1"/>
+  <text x="150" y="477" class="intervention" text-anchor="middle">NO_ACTION</text>
+
+  <rect x="50" y="492" width="200" height="28" rx="6" fill="#fffbeb" stroke="#fcd34d" stroke-width="1"/>
+  <text x="150" y="511" class="intervention" text-anchor="middle">REFUND_DUPLICATE</text>
+
+  <rect x="50" y="526" width="200" height="28" rx="6" fill="#eff6ff" stroke="#93c5fd" stroke-width="1"/>
+  <text x="150" y="545" class="intervention" text-anchor="middle">RECONCILE_PENDING</text>
+
+  <rect x="50" y="560" width="200" height="28" rx="6" fill="#faf5ff" stroke="#c4b5fd" stroke-width="1"/>
+  <text x="150" y="579" class="intervention" text-anchor="middle">SEND_RECOVERY_LINK</text>
+
+  <rect x="50" y="594" width="200" height="28" rx="6" fill="#fef2f2" stroke="#fca5a5" stroke-width="1"/>
+  <text x="150" y="613" class="intervention" text-anchor="middle">ESCALATE_HUMAN_REVIEW</text>
+
+  <!-- Key message banner -->
+  <rect x="30" y="630" width="860" height="35" rx="10" fill="#fefce8" stroke="#fde047" stroke-width="1.5"/>
+  <text x="460" y="653" class="message" text-anchor="middle">🔒 AI advises. Rules decide. Safety protects.</text>
+</svg>
