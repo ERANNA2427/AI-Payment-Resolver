@@ -184,23 +184,61 @@ A higher-resolution architecture diagram is available at [`docs/architecture.svg
 
 ---
 
+# How it works
+
+The system processes a customer payment, resolves its true state with deterministic rules, asks the AI only for explanation and copy, then a safety gate decides whether any money-moving action is allowed. Every decision is written to an append-only audit trail.
+
+```mermaid
+flowchart LR
+    A["Customer places order"] --> B["Digital payment<br/>card / UPI / wallet"]
+    B --> C["Payment gateway"]
+    C --> D{"Payment outcome"}
+    D -->|"success / duplicate / failed / pending / mismatch / refund"| E["Payment events"]
+    E --> F["Deterministic Resolver<br/>classifies payment state"]
+    F -. "advisory only" .-> N["AI Advisor<br/>explains and drafts copy"]
+    F --> G{"Decision"}
+    G -->|"no issue"| I["NO_ACTION"]
+    G -->|"stuck"| J["RECONCILE_PENDING"]
+    G -->|"abandoned"| K["SEND_RECOVERY_LINK"]
+    G -->|"duplicate • safety-checked"| L["REFUND_DUPLICATE"]
+    G -->|"uncertain"| M["ESCALATE_HUMAN_REVIEW"]
+    I --> O["Audit record"]
+    J --> O
+    K --> O
+    L --> O
+    M --> O
+    style N fill:#ede9fe,stroke:#7c3aed,stroke-dasharray: 5 5
+    style L fill:#fef3c7,stroke:#d97706
+    style M fill:#fee2e2,stroke:#dc2626
+    style O fill:#d1fae5,stroke:#059669
+```
+
+> This repository runs on **deterministic synthetic data**. No real customer payments are processed.
+
+---
+
 # Batch evidence
 
 The included dataset contains **50 deterministic synthetic orders across S1–S12**.
 
 Latest verified run:
 
-| Metric | Result |
+| Metric | Verified result |
 |---|---:|
 | Orders | 50 |
-| Total value | 378,132,000 paise |
-| Captured | 375,555,000 paise |
-| Refunded | 400,000 paise |
-| Revenue at risk | 2,177,000 paise |
-| Exceptions | 15 |
+| Total value | ₹37,81,320 |
+| Captured | ₹37,55,550 |
+| Refunded | ₹4,000 |
+| Revenue at risk | ₹21,770 |
+| Safety exceptions | 5 |
+| Dry-run blocks | 10 |
 | Human review count | 25 |
-| Human review value | 376,415,000 paise |
+| Human review value | ₹37,64,150 |
 | Accounting identity | **PASS** |
+
+These results come from 50 deterministic synthetic payment orders. The resolver accounted for ₹37,81,320 in total transaction value, while keeping payment decisions deterministic and auditable. Human review was triggered for 25 orders worth ₹37,64,150, and the accounting identity passed.
+
+> Money is stored internally as integer paise for deterministic accounting; the README displays amounts in Indian Rupees for readability.
 
 ### Intervention distribution
 
@@ -215,9 +253,7 @@ SEND_RECOVERY_LINK       6
 ### Test evidence
 
 ```text
-164 tests collected
-164 passed
-0 failed
+202 passed in 5.51s
 ```
 
 ---
