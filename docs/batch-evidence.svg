@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="680" viewBox="0 0 900 680">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 22px; font-weight: 700; fill: #0f172a; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 13px; fill: #64748b; }
+      .card { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1.5; }
+      .metric-label { font-family: Arial, sans-serif; font-size: 12px; fill: #475569; }
+      .metric-value { font-family: Arial, sans-serif; font-size: 16px; font-weight: 700; fill: #0f172a; }
+      .metric-value-green { font-family: Arial, sans-serif; font-size: 16px; font-weight: 700; fill: #16a34a; }
+      .metric-value-amber { font-family: Arial, sans-serif; font-size: 16px; font-weight: 700; fill: #d97706; }
+      .metric-value-red { font-family: Arial, sans-serif; font-size: 16px; font-weight: 700; fill: #dc2626; }
+      .metric-value-blue { font-family: Arial, sans-serif; font-size: 16px; font-weight: 700; fill: #2563eb; }
+      .section-title { font-family: Arial, sans-serif; font-size: 14px; font-weight: 700; fill: #1e293b; }
+      .bar-label { font-family: Arial, sans-serif; font-size: 11px; fill: #334155; }
+      .bar-value { font-family: Arial, sans-serif; font-size: 11px; font-weight: 600; fill: #1e293b; }
+      .footer { font-family: Arial, sans-serif; font-size: 10px; fill: #94a3b8; }
+      .pass { font-family: Arial, sans-serif; font-size: 14px; font-weight: 700; fill: #16a34a; }
+      .int-label { font-family: Arial, sans-serif; font-size: 11px; fill: #475569; }
+      .int-value { font-family: Arial, sans-serif; font-size: 13px; font-weight: 700; fill: #1e293b; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="680" fill="#f8fafc" rx="12"/>
+
+  <!-- Title -->
+  <text x="30" y="40" class="title">Batch evidence</text>
+  <text x="30" y="60" class="subtitle">50 deterministic synthetic orders · latest verified run</text>
+
+  <!-- Top summary cards -->
+  <!-- Orders -->
+  <rect x="30" y="85" width="130" height="80" rx="10" class="card"/>
+  <text x="95" y="115" class="metric-label" text-anchor="middle">Orders</text>
+  <text x="95" y="145" class="metric-value-blue" text-anchor="middle">50</text>
+
+  <!-- Total Value -->
+  <rect x="170" y="85" width="180" height="80" rx="10" class="card"/>
+  <text x="260" y="115" class="metric-label" text-anchor="middle">Total value</text>
+  <text x="260" y="145" class="metric-value" text-anchor="middle">₹37,81,320</text>
+
+  <!-- Captured -->
+  <rect x="360" y="85" width="170" height="80" rx="10" class="card"/>
+  <text x="445" y="115" class="metric-label" text-anchor="middle">Captured</text>
+  <text x="445" y="145" class="metric-value-green" text-anchor="middle">₹37,55,550</text>
+
+  <!-- Refunded -->
+  <rect x="540" y="85" width="150" height="80" rx="10" class="card"/>
+  <text x="615" y="115" class="metric-label" text-anchor="middle">Refunded</text>
+  <text x="615" y="145" class="metric-value-amber" text-anchor="middle">₹4,000</text>
+
+  <!-- Revenue at risk -->
+  <rect x="700" y="85" width="175" height="80" rx="10" class="card"/>
+  <text x="787" y="115" class="metric-label" text-anchor="middle">Revenue at risk</text>
+  <text x="787" y="145" class="metric-value-red" text-anchor="middle">₹21,770</text>
+
+  <!-- Safety row -->
+  <rect x="30" y="185" width="130" height="70" rx="10" class="card"/>
+  <text x="95" y="212" class="metric-label" text-anchor="middle">Safety</text>
+  <text x="95" y="228" class="metric-label" text-anchor="middle">exceptions</text>
+  <text x="95" y="248" class="metric-value-red" text-anchor="middle">5</text>
+
+  <rect x="170" y="185" width="130" height="70" rx="10" class="card"/>
+  <text x="235" y="212" class="metric-label" text-anchor="middle">Dry-run</text>
+  <text x="235" y="228" class="metric-label" text-anchor="middle">blocks</text>
+  <text x="235" y="248" class="metric-value-amber" text-anchor="middle">10</text>
+
+  <rect x="310" y="185" width="150" height="70" rx="10" class="card"/>
+  <text x="385" y="212" class="metric-label" text-anchor="middle">Human review</text>
+  <text x="385" y="228" class="metric-label" text-anchor="middle">count</text>
+  <text x="385" y="248" class="metric-value-blue" text-anchor="middle">25</text>
+
+  <rect x="470" y="185" width="200" height="70" rx="10" class="card"/>
+  <text x="570" y="212" class="metric-label" text-anchor="middle">Human review value</text>
+  <text x="570" y="240" class="metric-value" text-anchor="middle">₹37,64,150</text>
+
+  <!-- Accounting Identity PASS -->
+  <rect x="680" y="185" width="195" height="70" rx="10" fill="#f0fdf4" stroke="#86efac" stroke-width="2"/>
+  <text x="777" y="215" class="metric-label" text-anchor="middle">Accounting identity</text>
+  <text x="777" y="245" class="pass" text-anchor="middle">PASS ✓</text>
+
+  <!-- Intervention Distribution -->
+  <text x="30" y="295" class="section-title">Intervention distribution</text>
+
+  <!-- Bar chart -->
+  <!-- ESCALATE_HUMAN_REVIEW: 25 -->
+  <text x="30" y="320" class="int-label">ESCALATE_HUMAN_REVIEW</text>
+  <rect x="200" y="307" width="400" height="20" rx="4" fill="#dc2626"/>
+  <text x="610" y="322" class="int-value">25</text>
+
+  <!-- NO_ACTION: 9 -->
+  <text x="30" y="350" class="int-label">NO_ACTION</text>
+  <rect x="200" y="337" width="144" height="20" rx="4" fill="#2563eb"/>
+  <text x="354" y="352" class="int-value">9</text>
+
+  <!-- SEND_RECOVERY_LINK: 6 -->
+  <text x="30" y="380" class="int-label">SEND_RECOVERY_LINK</text>
+  <rect x="200" y="367" width="108" height="20" rx="4" fill="#7c3aed"/>
+  <text x="318" y="382" class="int-value">6</text>
+
+  <!-- RECONCILE_PENDING: 5 -->
+  <text x="30" y="410" class="int-label">RECONCILE_PENDING</text>
+  <rect x="200" y="397" width="90" height="20" rx="4" fill="#d97706"/>
+  <text x="300" y="412" class="int-value">5</text>
+
+  <!-- REFUND_DUPLICATE: 5 -->
+  <text x="30" y="440" class="int-label">REFUND_DUPLICATE</text>
+  <rect x="200" y="427" width="90" height="20" rx="4" fill="#059669"/>
+  <text x="300" y="442" class="int-value">5</text>
+
+  <!-- Verified results box -->
+  <rect x="30" y="475" width="845" height="70" rx="10" class="card"/>
+  <text x="452" y="500" class="section-title" text-anchor="middle">Verified results</text>
+  <text x="452" y="520" class="int-label" text-anchor="middle">captured (₹37,55,550) + refunded (₹4,000) + at risk (₹21,770) = total (₹37,81,320)</text>
+  <text x="452" y="538" class="int-label" text-anchor="middle">Accounting identity holds — every rupee is accounted for.</text>
+
+  <!-- Footer -->
+  <rect x="30" y="565" width="845" height="50" rx="10" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+  <text x="452" y="587" class="int-label" text-anchor="middle">202 tests passed · Replay: 50 blocked · New actions: 0 · Idempotent</text>
+  <text x="452" y="604" class="int-label" text-anchor="middle">Synthetic data only — no real customer payments processed.</text>
+
+  <!-- Bottom branding -->
+  <text x="30" y="640" class="footer">AI Payment Resolver · Razorpay AI Buildathon 2026 · Track 03: AI Revenue Recovery</text>
+  <text x="870" y="640" class="footer" text-anchor="end">Deterministic · Auditable · Safe</text>
+</svg>

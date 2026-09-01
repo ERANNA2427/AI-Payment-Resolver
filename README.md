@@ -11,7 +11,7 @@
 
 <p align="center">
   <img alt="Python" src="https://img.shields.io/badge/Python-3.14-3776AB?logo=python&logoColor=white">
-  <img alt="Tests" src="https://img.shields.io/badge/tests-164%20passing-2ea44f?logo=pytest&logoColor=white">
+  <img alt="Tests" src="https://img.shields.io/badge/tests-202%20passing-2ea44f?logo=pytest&logoColor=white">
   <img alt="Dependencies" src="https://img.shields.io/badge/runtime-stdlib%20only-111827">
   <img alt="Execution" src="https://img.shields.io/badge/money%20movement-simulated%20only-7c3aed">
   <img alt="Status" src="https://img.shields.io/badge/status-demo--ready-16a34a">
@@ -188,30 +188,7 @@ A higher-resolution architecture diagram is available at [`docs/architecture.svg
 
 The system processes a customer payment, resolves its true state with deterministic rules, asks the AI only for explanation and copy, then a safety gate decides whether any money-moving action is allowed. Every decision is written to an append-only audit trail.
 
-```mermaid
-flowchart LR
-    A["Customer places order"] --> B["Digital payment<br/>card / UPI / wallet"]
-    B --> C["Payment gateway"]
-    C --> D{"Payment outcome"}
-    D -->|"success / duplicate / failed / pending / mismatch / refund"| E["Payment events"]
-    E --> F["Deterministic Resolver<br/>classifies payment state"]
-    F -. "advisory only" .-> N["AI Advisor<br/>explains and drafts copy"]
-    F --> G{"Decision"}
-    G -->|"no issue"| I["NO_ACTION"]
-    G -->|"stuck"| J["RECONCILE_PENDING"]
-    G -->|"abandoned"| K["SEND_RECOVERY_LINK"]
-    G -->|"duplicate • safety-checked"| L["REFUND_DUPLICATE"]
-    G -->|"uncertain"| M["ESCALATE_HUMAN_REVIEW"]
-    I --> O["Audit record"]
-    J --> O
-    K --> O
-    L --> O
-    M --> O
-    style N fill:#ede9fe,stroke:#7c3aed,stroke-dasharray: 5 5
-    style L fill:#fef3c7,stroke:#d97706
-    style M fill:#fee2e2,stroke:#dc2626
-    style O fill:#d1fae5,stroke:#059669
-```
+![Payment flow from customer to audit trail](docs/how-it-works.svg)
 
 > This repository runs on **deterministic synthetic data**. No real customer payments are processed.
 
@@ -220,6 +197,8 @@ flowchart LR
 # Batch evidence
 
 The included dataset contains **50 deterministic synthetic orders across S1–S12**.
+
+![Verified batch results](docs/batch-evidence.svg)
 
 Latest verified run:
 
@@ -287,7 +266,7 @@ python -m pytest backend/tests/ -q
 Expected:
 
 ```text
-164 passed
+202 passed
 ```
 
 ## Run the batch demo
@@ -462,7 +441,7 @@ The important distinction is that **AI is used where uncertainty and communicati
 
 **Demo-ready**
 
-- 164 tests passing
+- 202 tests passing
 - 50 synthetic batch scenarios
 - 7 resolved states
 - 9 intervention types

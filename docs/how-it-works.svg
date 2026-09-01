@@ -1,0 +1,160 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="720" viewBox="0 0 900 720">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 22px; font-weight: 700; fill: #0f172a; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 13px; fill: #64748b; }
+      .card-title { font-family: Arial, sans-serif; font-size: 13px; font-weight: 700; fill: #1e293b; }
+      .card-text { font-family: Arial, sans-serif; font-size: 11px; fill: #475569; }
+      .label { font-family: Arial, sans-serif; font-size: 11px; fill: #334155; }
+      .small { font-family: Arial, sans-serif; font-size: 10px; fill: #64748b; }
+      .intervention { font-family: Arial, sans-serif; font-size: 11px; font-weight: 600; fill: #1e293b; }
+      .footer { font-family: Arial, sans-serif; font-size: 10px; fill: #94a3b8; }
+      .arrow { stroke: #94a3b8; stroke-width: 2; fill: none; }
+      .arrow-dash { stroke: #7c3aed; stroke-width: 2; fill: none; stroke-dasharray: 6 4; }
+      .card { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1.5; }
+      .card-blue { fill: #eff6ff; stroke: #93c5fd; stroke-width: 1.5; }
+      .card-green { fill: #f0fdf4; stroke: #86efac; stroke-width: 1.5; }
+      .card-amber { fill: #fffbeb; stroke: #fcd34d; stroke-width: 1.5; }
+      .card-red { fill: #fef2f2; stroke: #fca5a5; stroke-width: 1.5; }
+      .card-purple { fill: #f5f3ff; stroke: #c4b5fd; stroke-width: 1.5; }
+      .card-audit { fill: #f0fdfa; stroke: #5eead4; stroke-width: 1.5; }
+      .card-ai { fill: #faf5ff; stroke: #d8b4fe; stroke-width: 1.5; stroke-dasharray: 5 3; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="720" fill="#f8fafc" rx="12"/>
+
+  <!-- Title -->
+  <text x="30" y="40" class="title">How AI Payment Resolver works</text>
+  <text x="30" y="60" class="subtitle">From customer payment to safe, auditable action</text>
+
+  <!-- Main flow row -->
+  <!-- 1. Customer -->
+  <rect x="30" y="90" width="90" height="70" rx="10" class="card-blue"/>
+  <circle cx="60" cy="112" r="10" fill="#bfdbfe"/>
+  <rect x="53" y="122" width="14" height="16" rx="3" fill="#93c5fd"/>
+  <text x="75" y="116" class="label" text-anchor="middle">Customer</text>
+  <text x="75" y="132" class="small" text-anchor="middle">places order</text>
+
+  <!-- Arrow -->
+  <line x1="120" y1="125" x2="148" y2="125" class="arrow"/>
+  <polygon points="148,121 156,125 148,129" fill="#94a3b8"/>
+
+  <!-- 2. Digital Payment -->
+  <rect x="156" y="90" width="100" height="70" rx="10" class="card"/>
+  <text x="206" y="112" class="small" text-anchor="middle">💳 Card</text>
+  <text x="206" y="126" class="small" text-anchor="middle">📱 UPI</text>
+  <text x="206" y="140" class="small" text-anchor="middle">🏦 Net Banking</text>
+  <text x="206" y="154" class="card-title" text-anchor="middle">Payment</text>
+
+  <!-- Arrow -->
+  <line x1="256" y1="125" x2="284" y2="125" class="arrow"/>
+  <polygon points="284,121 292,125 284,129" fill="#94a3b8"/>
+
+  <!-- 3. Gateway -->
+  <rect x="292" y="90" width="90" height="70" rx="10" class="card"/>
+  <text x="337" y="118" class="small" text-anchor="middle">☁️ Gateway</text>
+  <text x="337" y="136" class="label" text-anchor="middle">Payment</text>
+  <text x="337" y="150" class="label" text-anchor="middle">Gateway</text>
+
+  <!-- Arrow -->
+  <line x1="382" y1="125" x2="410" y2="125" class="arrow"/>
+  <polygon points="410,121 418,125 410,129" fill="#94a3b8"/>
+
+  <!-- 4. Events -->
+  <rect x="418" y="90" width="90" height="70" rx="10" class="card"/>
+  <text x="463" y="116" class="small" text-anchor="middle">Success</text>
+  <text x="463" y="130" class="small" text-anchor="middle">Failed</text>
+  <text x="463" y="144" class="small" text-anchor="middle">Pending</text>
+  <text x="463" y="156" class="card-title" text-anchor="middle">Events</text>
+
+  <!-- Arrow -->
+  <line x1="508" y1="125" x2="536" y2="125" class="arrow"/>
+  <polygon points="536,121 544,125 536,129" fill="#94a3b8"/>
+
+  <!-- 5. Resolver -->
+  <rect x="544" y="90" width="100" height="70" rx="10" class="card-blue"/>
+  <text x="594" y="116" class="card-title" text-anchor="middle">⚙️ Resolver</text>
+  <text x="594" y="134" class="small" text-anchor="middle">deterministic</text>
+  <text x="594" y="148" class="small" text-anchor="middle">state + risk</text>
+  <text x="594" y="158" class="label" text-anchor="middle">classification</text>
+
+  <!-- Arrow -->
+  <line x1="644" y1="125" x2="672" y2="125" class="arrow"/>
+  <polygon points="672,121 680,125 672,129" fill="#94a3b8"/>
+
+  <!-- 6. Safety Gate -->
+  <rect x="680" y="90" width="90" height="70" rx="10" class="card-green"/>
+  <text x="725" y="116" class="card-title" text-anchor="middle">🛡️ Safety</text>
+  <text x="725" y="132" class="small" text-anchor="middle">12 invariants</text>
+  <text x="725" y="146" class="small" text-anchor="middle">idempotency</text>
+  <text x="725" y="158" class="label" text-anchor="middle">gate</text>
+
+  <!-- Arrow -->
+  <line x1="770" y1="125" x2="798" y2="125" class="arrow"/>
+  <polygon points="798,121 806,125 798,129" fill="#94a3b8"/>
+
+  <!-- 7. Action -->
+  <rect x="806" y="90" width="70" height="70" rx="10" class="card"/>
+  <text x="841" y="118" class="label" text-anchor="middle">Safe</text>
+  <text x="841" y="134" class="label" text-anchor="middle">Action</text>
+  <text x="841" y="150" class="small" text-anchor="middle">or Human</text>
+  <text x="841" y="158" class="small" text-anchor="middle">Review</text>
+
+  <!-- AI Advisor - side branch -->
+  <rect x="544" y="190" width="100" height="60" rx="10" class="card-ai"/>
+  <text x="594" y="212" class="card-title" text-anchor="middle">🤖 AI Advisor</text>
+  <text x="594" y="228" class="small" text-anchor="middle">Advisory Only</text>
+  <text x="594" y="244" class="small" text-anchor="middle">explains / copies</text>
+
+  <!-- Dashed arrow from Resolver to AI -->
+  <line x1="594" y1="160" x2="594" y2="188" class="arrow-dash"/>
+
+  <!-- Dashed arrow from AI back to Resolver level -->
+  <path d="M 544 220 C 510 220 510 175 544 175" class="arrow-dash" fill="none"/>
+  <polygon points="544,171 536,175 544,179" fill="#7c3aed"/>
+
+  <!-- Interventions row -->
+  <text x="30" y="300" class="card-title">Five possible interventions:</text>
+
+  <rect x="30" y="315" width="160" height="55" rx="8" class="card-green"/>
+  <text x="110" y="337" class="intervention" text-anchor="middle">NO_ACTION</text>
+  <text x="110" y="355" class="small" text-anchor="middle">payment is fine</text>
+
+  <rect x="200" y="315" width="160" height="55" rx="8" class="card-amber"/>
+  <text x="280" y="337" class="intervention" text-anchor="middle">RECONCILE_PENDING</text>
+  <text x="280" y="355" class="small" text-anchor="middle">stuck payment</text>
+
+  <rect x="370" y="315" width="160" height="55" rx="8" class="card"/>
+  <text x="450" y="337" class="intervention" text-anchor="middle">SEND_RECOVERY_LINK</text>
+  <text x="450" y="355" class="small" text-anchor="middle">abandoned checkout</text>
+
+  <rect x="540" y="315" width="160" height="55" rx="8" class="card-amber"/>
+  <text x="620" y="337" class="intervention" text-anchor="middle">REFUND_DUPLICATE</text>
+  <text x="620" y="355" class="small" text-anchor="middle">safety-protected</text>
+
+  <rect x="710" y="315" width="170" height="55" rx="8" class="card-red"/>
+  <text x="795" y="337" class="intervention" text-anchor="middle">ESCALATE_HUMAN_REVIEW</text>
+  <text x="795" y="355" class="small" text-anchor="middle">uncertain / unsafe</text>
+
+  <!-- Audit Trail -->
+  <rect x="30" y="400" width="850" height="75" rx="10" class="card-audit"/>
+  <text x="455" y="425" class="card-title" text-anchor="middle">📋 Audit Trail — every decision is recorded</text>
+  <text x="455" y="445" class="small" text-anchor="middle">Each decision becomes an immutable DecisionRecord with resolution, intervention, safety results, AI advisory, and execution data.</text>
+  <text x="455" y="462" class="small" text-anchor="middle">Replay produces zero duplicate actions — full idempotency safety.</text>
+
+  <!-- Bottom: Synthetic data disclaimer -->
+  <rect x="30" y="495" width="850" height="55" rx="10" fill="#fefce8" stroke="#fde047" stroke-width="1.5"/>
+  <text x="455" y="518" class="card-title" text-anchor="middle">⚠️ Synthetic data only — no real customer payments are processed.</text>
+  <text x="455" y="537" class="small" text-anchor="middle">This repository uses deterministic synthetic scenarios (S1–S12) for reproducible evaluation.</text>
+
+  <!-- Key message -->
+  <text x="455" y="585" class="subtitle" text-anchor="middle" font-weight="600" fill="#1e293b">
+    AI suggests. Rules decide. Safety protects.
+  </text>
+
+  <!-- Footer -->
+  <text x="30" y="610" class="footer">AI Payment Resolver · Razorpay AI Buildathon 2026 · Track 03: AI Revenue Recovery</text>
+  <text x="870" y="610" class="footer" text-anchor="end">Deterministic · Auditable · Safe</text>
+</svg>
