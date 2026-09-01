@@ -304,6 +304,118 @@ def cmd_replay(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_explain(args: argparse.Namespace) -> int:
+    """Explain a single scenario end-to-end."""
+    scenario_id = args.scenario
+
+    scenarios = _load_batch(args.batch if hasattr(args, "batch") and args.batch else "data/scenarios.jsonl")
+
+    scenario = None
+    for s in scenarios:
+        if s.get("order_id") == scenario_id:
+            scenario = s
+            break
+
+    if scenario is None:
+        print(f"Error: scenario '{scenario_id}' not found in dataset.", file=sys.stderr)
+        return 1
+
+    order = Order(
+        order_id=scenario["order_id"],
+        amount=scenario["order_amount"],
+        currency=scenario["order_currency"],
+        created_at=scenario.get("created_at", ""),
+    )
+
+    # Reset module-level state so this explanation is independent of prior runs
+    process_order._order_money_actions = {}
+    process_order._order_recovery_links = {}
+
+    ai_advisory = validate_advisory(
+        StubAdvisor().advise(
+            order_id=order.order_id,
+            resolved_state=_expected_state(scenario),
+            risk_reason=scenario.get("expected_risk_reason"),
+        )
+    )
+    ai_dict = {
+        "kind": ai_advisory.kind,
+        "text": ai_advisory.text,
+        "confidence": ai_advisory.confidence,
+        "metadata": ai_advisory.metadata,
+    }
+
+    record = process_order(
+        order,
+        scenario["events"],
+        execute=False,
+        audit_path=None,
+        ai_advisory=ai_dict,
+    )
+
+    print(_format_explanation(scenario, record, ai_advisory))
+    return 0
+
+
+def _format_explanation(scenario: dict, record: DecisionRecord, ai_advisory) -> str:
+    """Format a single-scenario explanation."""
+    amount_inr = _format_inr(scenario["order_amount"])
+
+    lines = [
+        "=== Scenario Explanation ===",
+        "",
+        f"Scenario / Order:",
+        f"  Order ID:       {scenario['order_id']}",
+        f"  Amount:         {amount_inr}",
+        f"  Currency:       {scenario.get('order_currency', 'INR')}",
+        f"  Event count:    {len(scenario.get('events', []))}",
+        "",
+        f"Resolution:",
+        f"  Resolved state: {record.resolved_state.value}",
+        f"  Risk reason:    {record.risk_reason or 'none'}",
+        f"  Intervention:   {record.intervention.value}",
+        f"  Revenue at risk: {'yes' if record.revenue_at_risk else 'no'}",
+        "",
+        f"AI Advisory (ADVISORY ONLY — does not decide financial action):",
+        f"  Kind:           {ai_advisory.kind}",
+        f"  Confidence:     {ai_advisory.confidence}",
+        f"  Text:           {ai_advisory.text}",
+        "",
+        f"Safety Gate:",
+    ]
+
+    safety_results = record.safety_results
+    for check_id, passed in sorted(safety_results.items()):
+        status = "PASS" if passed else "FAIL"
+        lines.append(f"  {check_id}: {status}")
+
+    dry_run_passed = safety_results.get("S09_DRY_RUN", True)
+    all_other_passed = all(
+        passed for cid, passed in safety_results.items() if cid != "S09_DRY_RUN"
+    )
+
+    lines.append("")
+    if not dry_run_passed:
+        lines.append("  Dry-run protection: ACTIVE — money movement blocked without --execute")
+    elif not all_other_passed:
+        lines.append("  Safety status: VETO — action escalated to human review")
+    else:
+        lines.append("  Safety status: PASS — all invariants satisfied")
+
+    lines.extend([
+        "",
+        f"Final outcome:",
+        f"  Proposed action: {record.intervention.value}",
+        f"  Simulated:       {record.simulated}",
+        f"  Money moved:     no (dry-run protection active)",
+        f"  Audit record:    would be written to JSONL in batch mode",
+        "",
+        "Note: AI provides explanation and copy. Deterministic rules decide the action.",
+    ])
+
+    return "\n".join(lines)
+
+
 def main(argv: Optional[list[str]] = None) -> int:
     """Main CLI entrypoint."""
     parser = argparse.ArgumentParser(
@@ -333,6 +445,12 @@ def main(argv: Optional[list[str]] = None) -> int:
     replay_parser = subparsers.add_parser("replay", help="Replay audit trail for idempotency check")
     replay_parser.add_argument("--audit", required=True, help="Path to audit trail")
     replay_parser.set_defaults(func=cmd_replay)
+
+    # explain command
+    explain_parser = subparsers.add_parser("explain", help="Explain a single scenario end-to-end")
+    explain_parser.add_argument("--scenario", required=True, help="Scenario/order ID (e.g. ORD-S6-001)")
+    explain_parser.add_argument("--batch", default="data/scenarios.jsonl", help="Path to scenario dataset")
+    explain_parser.set_defaults(func=cmd_explain)
 
     args = parser.parse_args(argv)
     return args.func(args)

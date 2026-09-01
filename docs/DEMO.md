@@ -40,7 +40,27 @@ Then:
 
 > "I built AI Payment Resolver: an AI-assisted revenue recovery system where AI can explain, but it cannot authorize money movement."
 
-## 0:35–1:20 — Problem and insight
+## 0:35–1:20 — Explain one scenario
+
+Run:
+
+```powershell
+python -m backend.cli explain --scenario ORD-S6-001
+```
+
+Then:
+
+```powershell
+python -m backend.cli explain --scenario ORD-S9-001
+```
+
+Say:
+
+> "Here is a duplicate payment. The resolver classified it as `DUPLICATE_PAYMENT`, the policy selected `REFUND_DUPLICATE`, and the AI drafted recovery copy for the customer. But notice the safety gate: `S09_DRY_RUN` blocked money movement. No money moved."
+
+> "Here is a contradictory case. The resolver escalated it to `HUMAN_REVIEW`. The AI summarizes the signals for the human reviewer. The safety gate vetoed any automated action."
+
+## 1:20–2:15 — Problem and insight
 
 Show the architecture diagram.
 

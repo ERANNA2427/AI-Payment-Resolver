@@ -261,6 +261,14 @@ Expected:
 202 passed
 ```
 
+## Explain a single scenario
+
+```powershell
+python -m backend.cli explain --scenario ORD-S6-001
+```
+
+This command locates one synthetic payment scenario, processes it through the full resolver pipeline, and prints a human-readable explanation: the resolved state, selected intervention, AI advisory text, all 12 safety-invariant results, dry-run protection status, and the final outcome. Useful for inspecting a specific case without reading raw JSONL.
+
 ## Run the batch demo
 
 ```powershell
