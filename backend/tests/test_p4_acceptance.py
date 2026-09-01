@@ -226,3 +226,24 @@ def test_batch_metrics_exceptions():
     ]
     metrics = compute_batch_metrics(records, orders)
     assert metrics.exceptions == 1
+    assert metrics.safety_violations == 1
+    assert metrics.intentional_dry_run_blocks == 0
+
+
+def test_batch_metrics_distinguishes_dry_run_block_from_safety_violation():
+    orders = {
+        "ORD-1": _order(order_id="ORD-1", amount=100000),
+    }
+    records = [
+        _record(
+            order_id="ORD-1",
+            intervention=Intervention.REFUND_DUPLICATE,
+            safety_results={"S09_DRY_RUN": False, "S08_HIGH_VALUE": True},
+            revenue_at_risk=True,
+            resolved_state=ResolvedState.DUPLICATE_PAYMENT,
+        ),
+    ]
+    metrics = compute_batch_metrics(records, orders)
+    assert metrics.intentional_dry_run_blocks == 1
+    assert metrics.safety_violations == 0
+    assert metrics.exceptions == 0

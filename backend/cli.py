@@ -19,8 +19,33 @@ from backend.ai.validator import validate_advisory
 from backend.audit import append_record, read_records
 from backend.metrics import BatchMetrics, compute_batch_metrics
 from backend.models import DecisionRecord, Intervention, Order, ResolvedState
-from backend.resolver import process_order
+from backend.resolver import process_order, resolve_order
 from backend.safety import CircuitBreaker, IdempotencyStore
+
+
+def _format_indian_number(value: int) -> str:
+    s = str(value)
+    if len(s) <= 3:
+        return s
+    head = s[-3:]
+    rest = s[:-3]
+    parts = []
+    while len(rest) > 2:
+        parts.append(rest[-2:])
+        rest = rest[:-2]
+    if rest:
+        parts.append(rest)
+    return ",".join(reversed(parts)) + "," + head
+
+
+def _format_inr_minor_units(amount_minor: int) -> str:
+    sign = "-" if amount_minor < 0 else ""
+    amount_abs = abs(amount_minor)
+    rupees, paise = divmod(amount_abs, 100)
+    rupees_formatted = _format_indian_number(rupees)
+    if paise == 0:
+        return f"{sign}₹{rupees_formatted}"
+    return f"{sign}₹{rupees_formatted}.{paise:02d}"
 
 
 def _load_batch(batch_path: str | Path) -> list[dict]:
@@ -65,11 +90,13 @@ def _run_batch(
 
         events = scenario["events"]
 
+        preview = resolve_order(order, events)
         ai_advisory = validate_advisory(
             advisor.advise(
                 order_id=order.order_id,
-                resolved_state=_expected_state(scenario),
-                risk_reason=scenario.get("expected_risk_reason"),
+                resolved_state=preview.resolved_state.value,
+                risk_reason=preview.risk_reason,
+                signals=preview.signals,
             )
         )
         ai_dict = {
@@ -100,23 +127,21 @@ def _run_batch(
     return records, metrics
 
 
-def _expected_state(scenario: dict) -> str:
-    """Get expected state for AI advisory (advisory runs on expected state)."""
-    return scenario.get("expected_state", "HUMAN_REVIEW")
-
-
 def _format_metrics(metrics: BatchMetrics) -> str:
     """Format metrics for display."""
+    no_action_decisions = metrics.intervention_counts.get(Intervention.NO_ACTION.value, 0)
     lines = [
         "=== Batch Metrics ===",
         f"Total orders:       {metrics.total_orders}",
-        f"Total value:        {metrics.total_value}",
-        f"Captured:           {metrics.captured}",
-        f"Refunded:           {metrics.refunded}",
-        f"At risk:            {metrics.at_risk}",
-        f"Exceptions:         {metrics.exceptions}",
+        f"Total value:        {_format_inr_minor_units(metrics.total_value)}",
+        f"Captured:           {_format_inr_minor_units(metrics.captured)}",
+        f"Refunded:           {_format_inr_minor_units(metrics.refunded)}",
+        f"At risk:            {_format_inr_minor_units(metrics.at_risk)}",
+        f"No-action decisions:{no_action_decisions:>11}",
+        f"Safely blocked (dry-run): {metrics.intentional_dry_run_blocks}",
+        f"Safety violations:  {metrics.safety_violations}",
         f"Human review count: {metrics.human_review_count}",
-        f"Human review value: {metrics.human_review_value}",
+        f"Human review value: {_format_inr_minor_units(metrics.human_review_value)}",
         "",
         "Intervention counts:",
     ]

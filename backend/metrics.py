@@ -21,7 +21,10 @@ class BatchMetrics:
     captured: int = 0
     refunded: int = 0
     at_risk: int = 0
+    # Legacy alias retained for compatibility; equals safety_violations.
     exceptions: int = 0
+    safety_violations: int = 0
+    intentional_dry_run_blocks: int = 0
     intervention_counts: dict = field(default_factory=dict)
     human_review_count: int = 0
     human_review_value: int = 0
@@ -58,7 +61,17 @@ def compute_batch_metrics(records: list[DecisionRecord], orders: dict[str, Order
         elif record.revenue_at_risk:
             metrics.at_risk += value
 
-        if not all(record.safety_results.values()):
+        safety_results = record.safety_results or {}
+        if safety_results.get("S09_DRY_RUN") is False:
+            metrics.intentional_dry_run_blocks += 1
+
+        non_dry_run_failure = any(
+            (passed is False)
+            for check_id, passed in safety_results.items()
+            if check_id != "S09_DRY_RUN"
+        )
+        if non_dry_run_failure:
+            metrics.safety_violations += 1
             metrics.exceptions += 1
 
         if intervention == Intervention.ESCALATE_HUMAN_REVIEW:

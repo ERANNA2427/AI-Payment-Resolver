@@ -219,6 +219,7 @@ def process_order(
     record.resolved_state = resolved_state
     record.intervention = intervention
     record.safety_results = safety_results
+    record.ai_advisory = ai_advisory
     record._stream = stream
 
     recovery = execute_intervention(record, execute=execute, order=order)
