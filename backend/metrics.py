@@ -22,6 +22,7 @@ class BatchMetrics:
     refunded: int = 0
     at_risk: int = 0
     exceptions: int = 0
+    dry_run_blocks: int = 0
     intervention_counts: dict = field(default_factory=dict)
     human_review_count: int = 0
     human_review_value: int = 0
@@ -59,7 +60,10 @@ def compute_batch_metrics(records: list[DecisionRecord], orders: dict[str, Order
             metrics.at_risk += value
 
         if not all(record.safety_results.values()):
-            metrics.exceptions += 1
+            if record.safety_results.get("S09_DRY_RUN") is False:
+                metrics.dry_run_blocks += 1
+            else:
+                metrics.exceptions += 1
 
         if intervention == Intervention.ESCALATE_HUMAN_REVIEW:
             metrics.human_review_count += 1

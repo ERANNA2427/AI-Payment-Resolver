@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.14"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run test suite
+        run: python -m pytest backend/tests/ -q
+
+      - name: Run batch demo (dry-run)
+        run: |
+          python -m backend.cli run \
+            --batch data/scenarios.jsonl \
+            --audit runs/demo/ci-audit.jsonl
+
+      - name: Generate report
+        run: |
+          python -m backend.cli report \
+            --audit runs/demo/ci-audit.jsonl
+
+      - name: Verify replay safety
+        run: |
+          python -m backend.cli replay \
+            --audit runs/demo/ci-audit.jsonl

@@ -13,7 +13,7 @@ import pytest
 from backend.ai.stub_advisor import StubAdvisor
 from backend.ai.validator import validate_advisory
 from backend.audit import read_records
-from backend.cli import _run_batch
+from backend.cli import _format_inr, _run_batch
 from backend.metrics import compute_batch_metrics
 from backend.models import DecisionRecord, Intervention, Order, ResolvedState
 from backend.resolver import process_order
@@ -539,10 +539,15 @@ class TestCLI:
             )
             assert result.returncode == 0, f"stderr: {result.stderr}"
             assert "Total orders:       50" in result.stdout
-            assert "Total value:        378132000" in result.stdout
-            assert "Captured:           375555000" in result.stdout
-            assert "Refunded:           400000" in result.stdout
-            assert "At risk:            2177000" in result.stdout
+            assert "Total value:        " in result.stdout
+            assert "37,81,320.00" not in result.stdout
+            assert "37,55,550.00" not in result.stdout
+            assert "4,000.00" not in result.stdout
+            assert "21,770.00" not in result.stdout
+            assert "37,81,320" in result.stdout
+            assert "37,55,550" in result.stdout
+            assert "4,000" in result.stdout
+            assert "21,770" in result.stdout
 
             replay_result = subprocess.run(
                 [
@@ -555,3 +560,32 @@ class TestCLI:
             assert replay_result.returncode == 0, f"stderr: {replay_result.stderr}"
             assert "Total records: 50" in replay_result.stdout
             assert "Blocked (idempotent): 50" in replay_result.stdout
+
+
+# --- INR formatting ------------------------------------------------------------
+
+
+class TestFormatINR:
+    """Tests for the human-facing INR formatter (spec §10)."""
+
+    def test_whole_rupee(self):
+        assert _format_inr(378132000) == "₹37,81,320"
+        assert _format_inr(400000) == "₹4,000"
+        assert _format_inr(100) == "₹1"
+
+    def test_zero(self):
+        assert _format_inr(0) == "₹0"
+
+    def test_fractional_rupee(self):
+        assert _format_inr(1234567) == "₹12,345.67"
+        assert _format_inr(67) == "₹0.67"
+        assert _format_inr(199) == "₹1.99"
+
+    def test_indian_lakh_crore_grouping(self):
+        assert _format_inr(378132000) == "₹37,81,320"
+        assert _format_inr(123456789) == "₹12,34,567.89"
+        assert _format_inr(10000000) == "₹1,00,000"
+        assert _format_inr(1000000000) == "₹1,00,00,000"
+
+    def test_negative_amount(self):
+        assert _format_inr(-400000) == "-₹4,000"

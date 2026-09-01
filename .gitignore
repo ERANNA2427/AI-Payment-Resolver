@@ -8,3 +8,9 @@ __pycache__/
 runs/
 .env
 .env.*
+
+# Local agent workspace
+.kilo/
+
+# Local video editing assets
+video-recordings/

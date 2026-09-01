@@ -105,18 +105,66 @@ def _expected_state(scenario: dict) -> str:
     return scenario.get("expected_state", "HUMAN_REVIEW")
 
 
+def _format_inr(paise: int) -> str:
+    """Format integer paise as Indian-rupee string with lakh/crore grouping.
+
+    Whole-rupee amounts omit the fractional paise suffix; non-zero paise are
+    always shown as two digits.
+
+    Examples:
+      0        -> '₹0'
+      100      -> '₹1'           (whole rupee, no .00)
+      400000   -> '₹4,000'       (whole rupee)
+      378132000 -> '₹37,81,320'  (lakh/crore grouping)
+      1234567  -> '₹12,345.67'   (with paise)
+      123456789 -> '₹12,34,567.89' (lakh/crore grouping with paise)
+    Falls back to 'Rs.' when stdout encoding lacks the ₹ glyph (e.g. Windows cp1252).
+    """
+    negative = paise < 0
+    paise = abs(paise)
+    rupees = paise // 100
+    frac = paise % 100
+
+    if rupees == 0:
+        result = "0"
+    else:
+        s = str(rupees)
+        if len(s) <= 3:
+            result = s
+        else:
+            last3 = s[-3:]
+            rest = s[:-3]
+            grouped_rest = ""
+            while rest:
+                grouped_rest = rest[-2:] + "," + grouped_rest if grouped_rest else rest[-2:]
+                rest = rest[:-2]
+            result = grouped_rest + "," + last3
+        result = result.rstrip(",")
+
+    sign = "-" if negative else ""
+    symbol = "₹"
+    try:
+        symbol.encode(sys.stdout.encoding or "utf-8")
+    except (UnicodeEncodeError, LookupError):
+        symbol = "Rs."
+    if frac == 0:
+        return f"{sign}{symbol}{result}"
+    return f"{sign}{symbol}{result}.{frac:02d}"
+
+
 def _format_metrics(metrics: BatchMetrics) -> str:
     """Format metrics for display."""
     lines = [
         "=== Batch Metrics ===",
         f"Total orders:       {metrics.total_orders}",
-        f"Total value:        {metrics.total_value}",
-        f"Captured:           {metrics.captured}",
-        f"Refunded:           {metrics.refunded}",
-        f"At risk:            {metrics.at_risk}",
-        f"Exceptions:         {metrics.exceptions}",
+        f"Total value:        {_format_inr(metrics.total_value)}",
+        f"Captured:           {_format_inr(metrics.captured)}",
+        f"Refunded:           {_format_inr(metrics.refunded)}",
+        f"At risk:            {_format_inr(metrics.at_risk)}",
+        f"Safety exceptions:  {metrics.exceptions}",
+        f"Dry-run blocks:     {metrics.dry_run_blocks}",
         f"Human review count: {metrics.human_review_count}",
-        f"Human review value: {metrics.human_review_value}",
+        f"Human review value: {_format_inr(metrics.human_review_value)}",
         "",
         "Intervention counts:",
     ]
