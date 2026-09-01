@@ -138,28 +138,7 @@ Each decision becomes a `DecisionRecord` in JSONL with resolution, intervention,
 
 # The critical safety boundary
 
-```text
-                    ┌───────────────────────┐
-                    │      AI ADVISOR       │
-                    │  explain / summarize  │
-                    │  draft recovery copy  │
-                    └───────────┬───────────┘
-                                │
-                         advisory data
-                                ▼
-┌──────────────┐      ┌───────────────────────┐
-│ DETERMINISTIC│ ───► │     SAFETY GATE       │
-│   RESOLVER   │      │  12 hard invariants   │
-└──────────────┘      │  idempotency          │
-                      │  circuit breaker       │
-                      │  dry-run enforcement   │
-                      └───────┬───────┬────────┘
-                              │       │
-                           PASS│       │VETO
-                              ▼       ▼
-                         EXECUTE   HUMAN REVIEW
-                         (simulated)
-```
+![Safety boundary — AI advises, Safety decides](docs/safety-boundary.svg)
 
 **The AI path has no API for selecting `ResolvedState`, selecting an `Intervention`, or moving money.**
 

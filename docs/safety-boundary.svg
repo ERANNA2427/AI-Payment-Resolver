@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="850" height="620" viewBox="0 0 850 620">
+  <defs>
+    <style>
+      .title { font-family: Arial, sans-serif; font-size: 22px; font-weight: 700; fill: #0f172a; }
+      .subtitle { font-family: Arial, sans-serif; font-size: 13px; fill: #64748b; }
+      .card-title { font-family: Arial, sans-serif; font-size: 14px; font-weight: 700; fill: #1e293b; }
+      .card-text { font-family: Arial, sans-serif; font-size: 11px; fill: #475569; }
+      .label { font-family: Arial, sans-serif; font-size: 12px; fill: #334155; }
+      .small { font-family: Arial, sans-serif; font-size: 10px; fill: #64748b; }
+      .pass-text { font-family: Arial, sans-serif; font-size: 13px; font-weight: 700; fill: #16a34a; }
+      .veto-text { font-family: Arial, sans-serif; font-size: 13px; font-weight: 700; fill: #dc2626; }
+      .message { font-family: Arial, sans-serif; font-size: 15px; font-weight: 700; fill: #1e293b; }
+      .footer { font-family: Arial, sans-serif; font-size: 10px; fill: #94a3b8; }
+      .card-purple { fill: #faf5ff; stroke: #c4b5fd; stroke-width: 2; }
+      .card-blue { fill: #eff6ff; stroke: #93c5fd; stroke-width: 2; }
+      .card-green { fill: #f0fdf4; stroke: #86efac; stroke-width: 2.5; }
+      .card-green-outline { fill: #f0fdf4; stroke: #22c55e; stroke-width: 2; }
+      .card-red { fill: #fef2f2; stroke: #fca5a5; stroke-width: 2; }
+      .card-ai { fill: #f5f3ff; stroke: #d8b4fe; stroke-width: 2; stroke-dasharray: 6 4; }
+      .card-sim { fill: #f0fdfa; stroke: #5eead4; stroke-width: 2; }
+    </style>
+    <!-- Arrow markers -->
+    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L10,3 L0,6 Z" fill="#16a34a"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L10,3 L0,6 Z" fill="#dc2626"/>
+    </marker>
+    <marker id="arrowPurple" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L10,3 L0,6 Z" fill="#7c3aed"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <path d="M0,0 L10,3 L0,6 Z" fill="#2563eb"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="850" height="620" fill="#f8fafc" rx="12"/>
+
+  <!-- Title -->
+  <text x="30" y="40" class="title">The critical safety boundary</text>
+  <text x="30" y="60" class="subtitle">AI suggests. Rules decide. Safety protects.</text>
+
+  <!-- AI Advisor - top left, visually separated with dashed border -->
+  <rect x="50" y="90" width="220" height="120" rx="14" class="card-ai"/>
+  <!-- AI icon -->
+  <rect x="70" y="108" width="36" height="30" rx="6" fill="#ddd6fe"/>
+  <circle cx="82" cy="120" r="4" fill="#7c3aed"/>
+  <circle cx="94" cy="120" r="4" fill="#7c3aed"/>
+  <line x1="106" y1="123" x2="118" y2="123" stroke="#7c3aed" stroke-width="2"/>
+  <text x="135" y="128" class="card-title">🤖 AI Advisor</text>
+  <text x="70" y="152" class="card-text">• normalize failure reasons</text>
+  <text x="70" y="168" class="card-text">• draft recovery copy</text>
+  <text x="70" y="184" class="card-text">• summarize human-review cases</text>
+  <text x="70" y="202" class="small" font-weight="600" fill="#7c3aed">Advisory only — no authority</text>
+
+  <!-- Dashed arrow from AI to Deterministic Resolver (advisory data) -->
+  <line x1="270" y1="150" x2="340" y2="260" stroke="#7c3aed" stroke-width="2.5" stroke-dasharray="8 5"/>
+  <polygon points="340,253 348,260 340,267" fill="#7c3aed"/>
+  <text x="305" y="210" class="small" fill="#7c3aed" text-anchor="middle">advisory data only</text>
+
+  <!-- Deterministic Resolver - center left -->
+  <rect x="350" y="230" width="200" height="100" rx="14" class="card-blue"/>
+  <text x="450" y="260" class="card-title" text-anchor="middle">⚙️ Deterministic Resolver</text>
+  <text x="450" y="282" class="card-text" text-anchor="middle">• classifies payment state</text>
+  <text x="450" y="298" class="card-text" text-anchor="middle">• selects intervention</text>
+  <text x="450" y="318" class="label" text-anchor="middle" font-weight="600">has financial authority</text>
+
+  <!-- Solid arrow from Resolver to Safety Gate -->
+  <line x1="550" y1="280" x2="600" y2="280" stroke="#2563eb" stroke-width="2.5"/>
+  <polygon points="600,273 610,280 600,287" fill="#2563eb"/>
+
+  <!-- Safety Gate - center, prominent -->
+  <rect x="610" y="100" width="210" height="180" rx="16" class="card-green"/>
+  <!-- Shield icon -->
+  <path d="M 715 118 L 735 124 L 735 148 Q 735 168 715 178 Q 695 168 695 148 L 695 124 Z" fill="#22c55e" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="715" y="152" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="700">✓</text>
+  <text x="715" y="200" class="card-title" text-anchor="middle">🛡️ Safety Gate</text>
+  <text x="625" y="220" class="card-text">• 12 hard invariants</text>
+  <text x="625" y="236" class="card-text">• idempotency</text>
+  <text x="625" y="252" class="card-text">• circuit breaker</text>
+  <text x="625" y="268" class="card-text">• dry-run enforcement</text>
+
+  <!-- PASS arrow - down left -->
+  <line x1="660" y1="280" x2="660" y2="340" stroke="#16a34a" stroke-width="3" marker-end="url(#arrowGreen)"/>
+  <text x="660" y="358" class="pass-text" text-anchor="middle">PASS</text>
+
+  <!-- VETO arrow - down right -->
+  <line x1="770" y1="280" x2="770" y2="340" stroke="#dc2626" stroke-width="3" marker-end="url(#arrowRed)"/>
+  <text x="770" y="358" class="veto-text" text-anchor="middle">VETO</text>
+
+  <!-- Simulated Execution - PASS outcome -->
+  <rect x="570" y="370" width="180" height="80" rx="14" class="card-sim"/>
+  <text x="660" y="400" class="card-title" text-anchor="middle">✅ Execute</text>
+  <text x="660" y="422" class="card-text" text-anchor="middle">simulated only</text>
+  <text x="660" y="440" class="small" text-anchor="middle">dry-run by default</text>
+
+  <!-- Human Review - VETO outcome -->
+  <rect x="720" y="370" width="100" height="80" rx="14" class="card-red"/>
+  <text x="770" y="400" class="card-title" text-anchor="middle">🛑 Human</text>
+  <text x="770" y="422" class="card-title" text-anchor="middle">Review</text>
+  <text x="770" y="440" class="small" text-anchor="middle">no unsafe action</text>
+
+  <!-- Key message banner -->
+  <rect x="50" y="480" width="770" height="65" rx="12" fill="#fefce8" stroke="#fde047" stroke-width="2"/>
+  <text x="435" y="508" class="message" text-anchor="middle">🔒 AI advises. Safety rules decide.</text>
+  <text x="435" y="530" class="small" text-anchor="middle">The AI path has no API for selecting ResolvedState, selecting an Intervention, or moving money.</text>
+
+  <!-- No authority indicators -->
+  <rect x="50" y="560" width="770" height="38" rx="8" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="435" y="584" class="small" text-anchor="middle">✗ AI cannot select ResolvedState　✗ AI cannot select Intervention　✗ AI cannot move money</text>
+
+  <!-- Footer -->
+  <text x="30" y="612" class="footer">AI Payment Resolver · Razorpay AI Buildathon 2026</text>
+</svg>
