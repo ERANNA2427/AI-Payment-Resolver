@@ -193,13 +193,13 @@ Latest verified run:
 | Metric | Result |
 |---|---:|
 | Orders | 50 |
-| Total value | 378,132,000 paise |
-| Captured | 375,555,000 paise |
-| Refunded | 400,000 paise |
-| Revenue at risk | 2,177,000 paise |
+| Total value | ₹37,81,320 |
+| Captured | ₹37,55,550 |
+| Refunded | ₹4,000 |
+| Revenue at risk | ₹21,770 |
 | Exceptions | 15 |
 | Human review count | 25 |
-| Human review value | 376,415,000 paise |
+| Human review value | ₹37,64,150 |
 | Accounting identity | **PASS** |
 
 ### Intervention distribution

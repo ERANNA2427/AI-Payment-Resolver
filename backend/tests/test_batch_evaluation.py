@@ -13,7 +13,7 @@ import pytest
 from backend.ai.stub_advisor import StubAdvisor
 from backend.ai.validator import validate_advisory
 from backend.audit import read_records
-from backend.cli import _run_batch
+from backend.cli import _format_inr_minor_units, _run_batch
 from backend.metrics import compute_batch_metrics
 from backend.models import DecisionRecord, Intervention, Order, ResolvedState
 from backend.resolver import process_order
@@ -87,6 +87,8 @@ class TestBatchProcessing:
 
         for record in records:
             assert record.simulated is True
+            assert isinstance(record.ai_advisory, dict)
+            assert "kind" in record.ai_advisory
 
     def test_expected_states_match(self):
         scenarios = _load_scenarios()
@@ -123,6 +125,28 @@ class TestBatchProcessing:
 
         accuracy = correct / len(scenarios)
         assert accuracy >= 0.95, f"Accuracy {accuracy:.2%} below 95%"
+
+    def test_ai_advisory_uses_resolved_state_not_expected_label(self):
+        scenario = {
+            "order_id": "ORD-AI-BOUNDARY",
+            "order_amount": 100000,
+            "order_currency": "INR",
+            "created_at": "2026-08-26T10:00:00+00:00",
+            "events": [
+                {"event_id": "o", "event_type": "order.created", "occurred_at": "2026-08-26T10:00:00+00:00"},
+                {"event_id": "c", "event_type": "payment.captured", "payment_id": "P1", "amount": 100000, "currency": "INR", "occurred_at": "2026-08-26T11:00:00+00:00"},
+            ],
+            # intentionally incorrect label to verify no label leakage
+            "expected_state": "HUMAN_REVIEW",
+            "expected_risk_reason": "ambiguous",
+        }
+        with tempfile.TemporaryDirectory() as tmpdir:
+            batch_path = Path(tmpdir) / "single.jsonl"
+            batch_path.write_text(json.dumps(scenario) + "\n", encoding="utf-8")
+            records, _ = _run_batch(batch_path=batch_path, execute=False)
+
+        assert records[0].resolved_state == ResolvedState.NORMAL_SUCCESS
+        assert records[0].ai_advisory["kind"] == "no_action"
 
 
 # --- Metrics ------------------------------------------------------------------
@@ -395,6 +419,15 @@ class TestAIFallback:
 
 
 class TestCLI:
+    def test_inr_formatter_whole_rupees(self):
+        assert _format_inr_minor_units(0) == "₹0"
+        assert _format_inr_minor_units(125000) == "₹1,250"
+        assert _format_inr_minor_units(12500000) == "₹1,25,000"
+
+    def test_inr_formatter_fractional_rupees(self):
+        assert _format_inr_minor_units(125050) == "₹1,250.50"
+        assert _format_inr_minor_units(1) == "₹0.01"
+
     def test_cli_run_dry_run(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             audit_path = Path(tmpdir) / "audit.jsonl"
@@ -539,10 +572,10 @@ class TestCLI:
             )
             assert result.returncode == 0, f"stderr: {result.stderr}"
             assert "Total orders:       50" in result.stdout
-            assert "Total value:        378132000" in result.stdout
-            assert "Captured:           375555000" in result.stdout
-            assert "Refunded:           400000" in result.stdout
-            assert "At risk:            2177000" in result.stdout
+            assert "Total value:        ₹37,81,320" in result.stdout
+            assert "Captured:           ₹37,55,550" in result.stdout
+            assert "Refunded:           ₹4,000" in result.stdout
+            assert "At risk:            ₹21,770" in result.stdout
 
             replay_result = subprocess.run(
                 [
