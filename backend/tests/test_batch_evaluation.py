@@ -576,6 +576,9 @@ class TestCLI:
             assert "Captured:           ₹37,55,550" in result.stdout
             assert "Refunded:           ₹4,000" in result.stdout
             assert "At risk:            ₹21,770" in result.stdout
+            assert "No-action decisions:" in result.stdout
+            assert "Safely blocked (dry-run): 10" in result.stdout
+            assert "Safety violations:  10" in result.stdout
 
             replay_result = subprocess.run(
                 [

@@ -100,9 +100,14 @@ Show:
 - captured,
 - refunded,
 - revenue at risk,
-- exceptions,
+- safely blocked (dry-run),
+- safety violations (fail-closed),
 - human-review count,
 - accounting identity.
+
+Clarify:
+
+> "Safely blocked (dry-run) counts intentional money-action blocks when `--execute` is not enabled. Safety violations count non-dry-run invariant failures that trigger fail-closed escalation."
 
 Then:
 

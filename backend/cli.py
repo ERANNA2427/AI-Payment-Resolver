@@ -129,6 +129,7 @@ def _run_batch(
 
 def _format_metrics(metrics: BatchMetrics) -> str:
     """Format metrics for display."""
+    no_action_decisions = metrics.intervention_counts.get(Intervention.NO_ACTION.value, 0)
     lines = [
         "=== Batch Metrics ===",
         f"Total orders:       {metrics.total_orders}",
@@ -136,7 +137,9 @@ def _format_metrics(metrics: BatchMetrics) -> str:
         f"Captured:           {_format_inr_minor_units(metrics.captured)}",
         f"Refunded:           {_format_inr_minor_units(metrics.refunded)}",
         f"At risk:            {_format_inr_minor_units(metrics.at_risk)}",
-        f"Exceptions:         {metrics.exceptions}",
+        f"No-action decisions:{no_action_decisions:>11}",
+        f"Safely blocked (dry-run): {metrics.intentional_dry_run_blocks}",
+        f"Safety violations:  {metrics.safety_violations}",
         f"Human review count: {metrics.human_review_count}",
         f"Human review value: {_format_inr_minor_units(metrics.human_review_value)}",
         "",

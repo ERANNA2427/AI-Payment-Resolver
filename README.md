@@ -197,10 +197,15 @@ Latest verified run:
 | Captured | ₹37,55,550 |
 | Refunded | ₹4,000 |
 | Revenue at risk | ₹21,770 |
-| Exceptions | 15 |
+| Safely blocked (dry-run) | 10 |
+| Safety violations (fail-closed) | 10 |
 | Human review count | 25 |
 | Human review value | ₹37,64,150 |
 | Accounting identity | **PASS** |
+
+Definitions:
+- **Safely blocked (dry-run):** intentional blocks of money-moving actions when `--execute` is not enabled.
+- **Safety violations (fail-closed):** non-dry-run invariant failures that force escalation to `ESCALATE_HUMAN_REVIEW`.
 
 ### Intervention distribution
 
@@ -391,7 +396,7 @@ Recommended story:
 3. Show AI explanation without AI authority.
 4. Show the safety gate vetoing unsafe action.
 5. Show bounded recovery / simulated execution.
-6. Show batch economics and exceptions.
+6. Show batch economics, dry-run blocking, and safety violations.
 7. Replay the same audit trail and prove zero duplicate actions.
 
 ---
@@ -415,7 +420,7 @@ Execute only when permitted
         ↓
 Record the decision
         ↓
-Measure recovery + exceptions
+Measure recovery + safety outcomes
 ```
 
 The important distinction is that **AI is used where uncertainty and communication benefit from it, while financial authority remains deterministic and policy-controlled.**
