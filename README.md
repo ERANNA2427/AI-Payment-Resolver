@@ -131,27 +131,8 @@ Each decision becomes a `DecisionRecord` in JSONL with resolution, intervention,
 
 # Architecture
 
-```mermaid
-flowchart TD
-    A["Payment Events<br/>webhooks / gateway signals"] --> B["Event Normalization<br/>backend/events.py"]
-    B --> C["Deterministic Resolver<br/>backend/resolver.py"]
-    C --> D["Resolved State + Bounded Intervention"]
+![Architecture diagram](docs/architecture.svg)
 
-    C -. "advisory only" .-> E["AI Advisor<br/>backend/ai/"]
-    E --> F["Allowlist + Confidence Validator"]
-    F -. "explanation / copy / summary" .-> D
-
-    D --> G["Safety Gate<br/>12 invariants + idempotency + circuit breaker"]
-    G -->|PASS| H["Execution Boundary<br/>dry-run by default"]
-    G -->|VETO| I["HUMAN_REVIEW"]
-
-    H --> J["Simulated Gateway"]
-    J --> K["Append-only DecisionRecord"]
-    I --> K
-    K --> L["Batch Metrics + Replay"]
-```
-
-A higher-resolution architecture diagram is available at [`docs/architecture.svg`](docs/architecture.svg).
 
 ---
 
