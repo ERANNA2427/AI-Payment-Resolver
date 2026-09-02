@@ -1,111 +1,42 @@
-# AI Payment Resolver
+# AI-Payment-Resolver
 
-<p align="center">
-  <img src="docs/hero.svg" alt="AI Payment Resolver — Resolve ambiguity. Recover safely. Prove every decision." width="100%">
-</p>
+> Deterministic payment-state resolution and bounded revenue recovery with fail-closed safety controls.
 
-<p align="center">
-  <strong>AI-assisted payment state resolution and bounded revenue recovery</strong><br>
-  Deterministic decisions • Fail-closed safety • Idempotent recovery • Audit-ready evidence
-</p>
+AI Payment Resolver turns ambiguous payment event streams into a deterministic payment state, a bounded recovery decision, and an append-only audit trail. The system separates financial authority from explanation: deterministic rules classify payment state and select interventions, a safety gate vetoes unsafe actions, and an AI layer provides advisory-only explanations, recovery copy, and human-review summaries. Money movement is simulated by default and requires an explicit `--execute` flag.
 
-<p align="center">
-  <img alt="Python" src="https://img.shields.io/badge/Python-3.14-3776AB?logo=python&logoColor=white">
-  <img alt="Tests" src="https://img.shields.io/badge/tests-202%20passing-2ea44f?logo=pytest&logoColor=white">
-  <img alt="Dependencies" src="https://img.shields.io/badge/runtime-stdlib%20only-111827">
-  <img alt="Execution" src="https://img.shields.io/badge/money%20movement-simulated%20only-7c3aed">
-  <img alt="Status" src="https://img.shields.io/badge/status-demo--ready-16a34a">
-</p>
+## Problem
 
-> **Razorpay AI Buildathon 2026 — Track 03: AI Revenue Recovery**
+Payment and checkout systems emit event streams that arrive out of order, duplicated, or contradictory. A webhook can arrive late, twice, with the wrong amount, or contradict another event. Operating on a guessed state is dangerous: re-charging a customer who already paid, double-capturing, or double-refunding causes direct financial loss and compliance exposure.
 
-## The one-line idea
+Today this is handled manually by operations teams after the money is already gone. The gap is not detecting the failure — it is deciding what to do next without making the financial situation worse.
 
-**Don't let an ambiguous payment event become an unsafe payment action.**
+## Solution
 
-AI Payment Resolver turns messy, delayed, duplicated, contradictory payment events into a deterministic payment state, a bounded recovery decision, and an immutable audit record — while a separate safety gate can veto every money-moving action.
+AI Payment Resolver closes that gap by deterministically resolving payment state from raw events, detecting revenue at risk, selecting a bounded recovery action, and executing or safely simulating it within hard guardrails — with a full audit trail.
 
----
+The system processes each order through an ordered, deterministic pipeline:
 
-## 🎥 4K Demo Video
+1. **Ingest** — accept a stream of payment/checkout events for one order.
+2. **Normalize** — deduplicate by event id, stable-sort by occurrence time, flag out-of-order arrival.
+3. **Resolve state** — apply a deterministic rule table to produce exactly one `ResolvedState` plus a `rule_trace`.
+4. **Detect risk** — classify whether revenue is at risk and identify the root cause.
+5. **Decide intervention** — map `ResolvedState` to exactly one bounded `Intervention`.
+6. **Safety gate** — run twelve invariant checks; any failure vetoes the action and downgrades to `HUMAN_REVIEW`.
+7. **Execute or simulate** — perform the action against a simulated gateway in dry-run by default; `--execute` is required for any money movement.
+8. **Record** — append one immutable `DecisionRecord` to the audit trail.
+9. **Aggregate** — accumulate metrics across the batch.
 
-Watch the complete 5:17 competition demonstration of AI-Payment-Resolver.
+State resolution is a pure function with no I/O, no clock, and no randomness — all time and configuration are injected — so it is exhaustively testable.
 
-**▶ [Watch the 4K Competition Demo](https://drive.google.com/file/d/1ajgVmXaYCO-b-EOuyuFwAiTdTHaLQBrN/view?usp=sharing)**
+## System Architecture
 
-- Duration: 5:17
-- Resolution: 4K
-- Data: Synthetic payment scenarios
-- Execution: Dry-run only
+![Architecture diagram](docs/architecture.svg)
 
----
+## How It Works
 
-## For merchants: what this solves
+![Payment flow from customer to audit trail](docs/how-it-works.svg)
 
-You run an online business. Your customers pay using cards, UPI, wallets, or net banking. Most payments succeed, but some become ambiguous: a duplicate capture, a payment stuck in pending, a mismatch between the order amount and the gateway report, or a refund that needs validation.
-
-**AI Payment Resolver** takes your payment and gateway information and determines the appropriate next step:
-
-- **Deterministic business rules** classify the payment state and select the intervention. Rules are always authoritative.
-- **The AI layer is advisory only.** It can explain what likely happened, summarize the case, and suggest recovery copy. It cannot select a payment state, choose an intervention, or move money.
-- **A safety gate** checks every proposed action against 12 hard invariants (amount bounds, currency consistency, idempotency, circuit breaker, dry-run enforcement). Unsafe or uncertain cases are escalated to human review.
-- **Every decision is recorded** in an append-only audit trail and can be replayed safely with zero duplicate money movement.
-
-### Merchant benefits
-
-- **Protect revenue** from payment failures and duplicates
-- **Reduce unnecessary manual investigation** with consistent automated resolution
-- **Resolve payment issues consistently** using deterministic rules
-- **Keep humans in control** of sensitive or uncertain cases
-- **Maintain an auditable record** of every decision
-- **Prevent duplicate money movement** through idempotency and safety checks
-
-> This repository uses **deterministic synthetic data** and does not process real customer payments.
-
-![Merchant payment flow](docs/merchant-payment-flow.svg)
-
----
-
-## For engineers: how it works
-
-![Resolver technical flow](docs/merchant-how-it-works.svg)
-
----
-
-## Why this problem matters
-
-Payment failure is rarely a single clean event.
-
-A payment can be:
-
-- authorized after the expected window,
-- captured twice,
-- reported with the wrong amount or currency,
-- stuck in pending,
-- accompanied by contradictory webhooks,
-- abandoned after checkout,
-- or surrounded by noisy gateway error messages.
-
-A naive recovery agent can make the situation worse by retrying blindly, refunding the wrong payment, or acting on an incorrect state.
-
-This project separates **reasoning** from **authority**.
-
-### Core principle
-
-```text
-AI may explain.
-Deterministic policy decides.
-Safety may veto.
-Only the execution boundary can act.
-```
-
----
-
-## What is actually built
-
-### 1. Deterministic payment-state resolver
-
-Maps normalized payment events to one of seven states:
+The system classifies payments into one of seven terminal states:
 
 | State | Meaning |
 |---|---|
@@ -114,98 +45,80 @@ Maps normalized payment events to one of seven states:
 | `PENDING_PAYMENT` | Payment remains unresolved/in-flight |
 | `LATE_AUTHORIZATION` | Authorization arrived outside the configured window |
 | `DUPLICATE_PAYMENT` | More than one successful payment exists for one order |
-| `ORDER_PAYMENT_MISMATCH` | Amount/currency does not reconcile |
+| `ORDER_PAYMENT_MISMATCH` | Amount or currency does not reconcile |
 | `HUMAN_REVIEW` | Evidence is contradictory, unsafe, or requires intervention |
 
-### 2. Bounded interventions
+Each state maps to exactly one bounded intervention. Only two interventions may move money, and both pass the full safety gate.
 
-The policy layer maps states to a constrained set of interventions.
+## AI Boundary
 
-Money-moving actions are deliberately narrow. High-risk or ambiguous cases are escalated.
+AI is advisory-only. It can read events and emit a structured advisory, but it **cannot** select a payment state, choose an intervention, authorize a refund, move money, bypass safety checks, override deterministic rules, bypass idempotency, or change the audit trail.
 
-### 3. AI advisory layer
+AI may:
+- **Explain outcomes** — normalize failure reasons and summarize resolution evidence.
+- **Draft recovery communication** — generate bounded customer-facing retry/nudge text.
+- **Assist human review** — produce concise case summaries with suggested next steps for escalated orders.
 
-The AI layer is **not the decision maker**.
+AI must NOT:
+- select `ResolvedState`
+- select `Intervention`
+- authorize refunds or captures
+- move money
+- bypass safety checks
+- override deterministic rules
+- bypass idempotency
+- change the audit trail
 
-It can:
+The default AI provider is an offline deterministic stub (no API key, no network). A real LLM is an optional drop-in behind the same interface. All AI output passes through a validator that enforces an allowlist and a confidence floor (`0.7`). Invalid or low-confidence output falls back to deterministic defaults.
 
-- normalize failure reasons,
-- draft recovery copy,
-- summarize human-review cases.
+## Safety Model
 
-Its output is validated by an allowlist and confidence floor. Invalid or low-confidence output falls back to a deterministic result.
+The safety gate has **veto authority** over every money-moving action.
 
-### 4. Safety gate
-
-The safety gate has veto power.
-
-It enforces 12 tested safety invariants covering:
-
-- amount bounds,
-- currency consistency,
-- authorization/capture relationships,
-- late-auth windows,
-- duplicate handling,
-- idempotency,
-- recovery-link limits,
-- dry-run behavior,
-- circuit-breaker behavior,
-- AI confidence validation,
-- and other execution constraints.
-
-**If a safety check fails, the action fails closed and escalates to human review.**
-
-### 5. Idempotent execution
-
-Every decision carries an idempotency key.
-
-Replay of the same audit trail produces:
-
-```text
-Blocked (idempotent): 50
-New actions:           0
+```
+Payment Events
+       ↓
+Deterministic State Resolution
+       ↓
+Risk Assessment
+       ↓
+Intervention Proposal
+       ↓
+Safety Gate (12 invariants)
+       ↓
+Bounded Action / Human Review / No Action
+       ↓
+Append-Only Audit Record
 ```
 
-No duplicate money movement.
+![AI safety boundary](docs/safety-boundary.svg)
 
-### 6. Append-only audit trail
+The safety gate enforces twelve tested invariants covering:
+- amount bounds
+- currency consistency
+- authorization/capture relationships
+- late-authorization windows
+- duplicate handling
+- idempotency
+- recovery-link limits
+- dry-run behavior
+- circuit-breaker behavior
+- AI confidence validation
+- and other execution constraints
 
-Each decision becomes a `DecisionRecord` in JSONL with resolution, intervention, safety results, AI advisory data, signals, and execution/economic information.
+If any safety check fails, the action fails closed and escalates to `HUMAN_REVIEW`. No unsafe money movement occurs.
 
----
+**Dry-run execution:** Money actions require an explicit `--execute` flag. The default run is dry-run only.
 
-# Architecture
+**Idempotency:** Every decision carries a stable idempotency key. Replay of the same audit trail produces zero duplicate money actions.
 
-![Architecture diagram](docs/architecture.svg)
+**Append-only audit:** Each decision becomes a `DecisionRecord` in JSONL with resolution, intervention, safety results, AI advisory data, signals, and execution information. The trail is immutable and replayable.
 
+## Batch Evidence
 
----
+The included dataset contains **210 verified tests** across **50 deterministic synthetic orders** spanning scenario families S1–S12.
 
-# The critical safety boundary
-
-![Safety boundary — AI advises, Safety decides](docs/safety-boundary.svg)
-
-**The AI path has no API for selecting `ResolvedState`, selecting an `Intervention`, or moving money.**
-
----
-
-# How it works
-
-The system processes a customer payment, resolves its true state with deterministic rules, asks the AI only for explanation and copy, then a safety gate decides whether any money-moving action is allowed. Every decision is written to an append-only audit trail.
-
-![Payment flow from customer to audit trail](docs/how-it-works.svg)
-
-> This repository runs on **deterministic synthetic data**. No real customer payments are processed.
-
----
-
-# Batch evidence
-
-The included dataset contains **50 deterministic synthetic orders across S1–S12**.
-
-![Verified batch results](docs/batch-evidence.svg)
-
-Latest verified run:
+Latest verified run (dry-run):
 
 | Metric | Verified result |
 |---|---:|
@@ -222,35 +135,68 @@ Latest verified run:
 
 These results come from 50 deterministic synthetic payment orders. The resolver accounted for ₹37,81,320 in total transaction value, while keeping payment decisions deterministic and auditable. Human review was triggered for 25 orders worth ₹37,64,150, and the accounting identity passed.
 
-> Money is stored internally as integer paise for deterministic accounting; the README displays amounts in Indian Rupees for readability.
+> Money is stored internally as integer paise for deterministic accounting; documentation displays amounts in Indian Rupees for readability.
 
 ### Intervention distribution
 
-```text
+```
 ESCALATE_HUMAN_REVIEW   25
 NO_ACTION                9
+SEND_RECOVERY_LINK       6
 RECONCILE_PENDING        5
 REFUND_DUPLICATE         5
-SEND_RECOVERY_LINK       6
 ```
 
-### Test evidence
+### Idempotency verification
 
-```text
-202 passed in 5.51s
+Replaying the audit trail produces:
+
+```
+Blocked (idempotent): 50
+New actions:           0
+PASS: All actions idempotent
 ```
 
----
+No duplicate money movement.
 
-# Quickstart
+## Scenario Walkthrough
 
-## Requirements
+### Duplicate payment (ORD-S6-001)
+
+```powershell
+python -m backend.cli explain --scenario ORD-S6-001
+```
+
+Demonstrates `DUPLICATE_PAYMENT` resolution, `REFUND_DUPLICATE` intervention, AI recovery copy, and safety-gate dry-run protection.
+
+### Contradictory evidence (ORD-S9-001)
+
+```powershell
+python -m backend.cli explain --scenario ORD-S9-001
+```
+
+Demonstrates `HUMAN_REVIEW` escalation, contradictory evidence handling, AI human-review summary, and fail-closed handling of ambiguous evidence.
+
+## Project Walkthrough & Technical Demonstration
+
+A complete 5:17 walkthrough of AI-Payment-Resolver, demonstrating the system architecture, deterministic payment-state resolution, safety controls, AI advisory layer, batch evidence, and dry-run execution.
+
+**▶ [Watch the Project Walkthrough](https://drive.google.com/file/d/1ajgVmXaYCO-b-EOuyuFwAiTdTHaLQBrN/view?usp=sharing)**
+
+- Duration: 5:17
+- Resolution: 4K
+- Data: Synthetic payment scenarios
+- Execution: Dry-run only
+
+## Quickstart
+
+### Requirements
 
 - Python 3.14+
 - `pytest` for the test suite
 - No runtime third-party dependencies
 
-## Install
+### Install
 
 ```powershell
 git clone https://github.com/ERANNA2427/AI-Payment-Resolver.git
@@ -262,7 +208,7 @@ python -m venv .venv
 python -m pip install -r requirements.txt
 ```
 
-## Verify the system
+### Run tests
 
 ```powershell
 python -m pytest backend/tests/ -q
@@ -271,18 +217,10 @@ python -m pytest backend/tests/ -q
 Expected:
 
 ```text
-202 passed
+210 passed
 ```
 
-## Explain a single scenario
-
-```powershell
-python -m backend.cli explain --scenario ORD-S6-001
-```
-
-This command locates one synthetic payment scenario, processes it through the full resolver pipeline, and prints a human-readable explanation: the resolved state, selected intervention, AI advisory text, all 12 safety-invariant results, dry-run protection status, and the final outcome. Useful for inspecting a specific case without reading raw JSONL.
-
-## Run the batch demo
+### Run the batch demo
 
 ```powershell
 python -m backend.cli run `
@@ -292,14 +230,14 @@ python -m backend.cli run `
 
 **Dry-run is the default.**
 
-## Generate the report
+### Generate the report
 
 ```powershell
 python -m backend.cli report `
   --audit runs/demo/final-audit.jsonl
 ```
 
-## Verify replay safety
+### Verify replay safety
 
 ```powershell
 python -m backend.cli replay `
@@ -316,11 +254,9 @@ PASS: All actions idempotent
 
 Money movement is simulated only. `--execute` is required even for the simulated execution path.
 
----
+## Project Structure
 
-# Repository map
-
-```text
+```
 AI-Payment-Resolver/
 ├── backend/
 │   ├── ai/
@@ -344,129 +280,48 @@ AI-Payment-Resolver/
 ├── docs/
 │   ├── architecture.svg
 │   ├── AI_SAFETY.md
-│   └── DEMO.md
+│   ├── batch-evidence.svg
+│   ├── DEMO.md
+│   ├── hero.svg
+│   ├── how-it-works.svg
+│   ├── merchant-how-it-works.svg
+│   ├── merchant-payment-flow.svg
+│   └── safety-boundary.svg
+├── .github/workflows/ci.yml
 ├── ARCHITECTURE.md
 ├── PROJECT_SPEC.md
-├── README.md
+├── CONTRIBUTING.md
+├── SECURITY.md
 ├── pyproject.toml
-└── requirements.txt
+├── requirements.txt
+└── README.md
 ```
 
----
+## Razorpay AI Revenue Recovery Alignment
 
-# Design choices
+Built as a submission for the **Razorpay AI Buildathon — AI Revenue Recovery** track.
 
-### Stdlib-only runtime
+The project maps to the track requirements:
 
-No framework or LLM SDK is required to run the core system. The default AI provider is an offline deterministic stub.
+| Track requirement | Implementation |
+|---|---|
+| Detect revenue at risk | Deterministic state resolution identifies `NORMAL_FAILURE`, `PENDING_PAYMENT`, `LATE_AUTHORIZATION`, `DUPLICATE_PAYMENT`, `ORDER_PAYMENT_MISMATCH`, and `HUMAN_REVIEW` states |
+| Determine appropriate intervention | Policy layer maps each state to exactly one bounded `Intervention` |
+| Execute bounded recovery workflow | Safety gate enforces 12 invariants before any money-moving action; dry-run is the default |
+| Measured batch evidence | 50 synthetic scenarios with verified metrics and accounting identity |
+| Compliant / human escalation | 12 safety invariants, fail-closed design, `ESCALATE_HUMAN_REVIEW` for all ambiguous or unsafe cases |
+| Stopping rules | Circuit breaker halts money actions when batch exception rate exceeds threshold |
+| Audit trail | Append-only JSONL with idempotency keys, rule traces, safety results, and replay verification |
 
-This makes the demo reproducible and removes network/API-key dependencies.
+## Engineering Principles
 
-### Integer money
-
-Amounts are represented as integer minor units.
-
-**No floating-point money arithmetic.**
-
-### Pure resolution
-
-The resolver is deterministic with injected time/configuration.
-
-That makes the state decision testable and replayable.
-
-### Fail closed
-
-Safety violations do not silently continue.
-
-```text
-safety failure
-      ↓
-HUMAN_REVIEW
-      ↓
-no unsafe money movement
-```
-
-### Synthetic data only
-
-`data/scenarios.jsonl` contains synthetic scenarios. No real customer/payment data is included.
-
----
-
-# What broke — and how it was fixed
-
-During development, the audit CLI exposed an important production-style issue:
-
-**Repeated `run --audit PATH` calls append to the immutable JSONL audit trail.**
-
-The first report was correct, but a later report could double-count logical decisions if every physical record was treated as unique.
-
-The fix preserved append-only writes and added **idempotency-key deduplication at report/replay read time**.
-
-Regression coverage now protects this behavior.
-
-This is intentionally documented because reliable systems are not defined by never failing; they are defined by how failures are detected, contained, and corrected.
-
----
-
-# Demo
-
-The 5-minute walkthrough is documented in [`docs/DEMO.md`](docs/DEMO.md).
-
-Recommended story:
-
-1. Start with an ambiguous payment.
-2. Show deterministic resolution.
-3. Show AI explanation without AI authority.
-4. Show the safety gate vetoing unsafe action.
-5. Show bounded recovery / simulated execution.
-6. Show batch economics and exceptions.
-7. Replay the same audit trail and prove zero duplicate actions.
-
----
-
-# Track alignment
-
-**Razorpay AI Buildathon — AI Revenue Recovery**
-
-This project is designed around the track's central loop:
-
-```text
-Detect revenue at risk
-        ↓
-Diagnose the payment state
-        ↓
-Choose a bounded intervention
-        ↓
-Apply safety constraints
-        ↓
-Execute only when permitted
-        ↓
-Record the decision
-        ↓
-Measure recovery + exceptions
-```
-
-The important distinction is that **AI is used where uncertainty and communication benefit from it, while financial authority remains deterministic and policy-controlled.**
-
----
-
-# Status
-
-**Demo-ready**
-
-- 202 tests passing
-- 50 synthetic batch scenarios
-- 7 resolved states
-- 9 intervention types
-- 12 safety invariants
-- AI advisory boundary
-- append-only audit trail
-- accounting identity verification
-- idempotent replay
-- dry-run by default
-- simulated execution only
-
----
+- **Deterministic authority** — State resolution, policy mapping, and safety checks are deterministic with injected time and configuration. Safety evaluation bookkeeping is isolated and does not alter resolution or policy outcomes.
+- **Advisory-only AI** — AI explains, summarizes, and drafts copy. It never selects state, chooses intervention, or moves money.
+- **Fail-closed safety** — Any safety violation vetoes the action and escalates to human review. The system never tries to be clever with money.
+- **Integer money** — All amounts are integer minor units (paise). No floating-point arithmetic.
+- **Idempotent execution** — Stable idempotency keys ensure replay produces zero duplicate money actions.
+- **Synthetic data only** — The dataset contains deterministic synthetic scenarios. No real customer payments are processed.
+- **Stdlib-only runtime** — Python 3.14 standard library only at runtime. `pytest` is the only external dependency.
 
 ## License
 

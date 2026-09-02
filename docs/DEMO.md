@@ -1,8 +1,10 @@
-# 5-Minute Demo Runbook
+# Project Walkthrough & Technical Demonstration
+
+> A concise five-minute demonstration runbook covering deterministic payment resolution, bounded recovery, safety controls, AI advisory behavior, batch evidence, and idempotent replay.
 
 ## Objective
 
-Demonstrate a complete revenue-recovery loop in under five minutes:
+Demonstrate a complete revenue-recovery loop in approximately five minutes:
 
 **ambiguous payment → resolved state → bounded intervention → safety decision → simulated execution → metrics → human review → idempotent replay**
 
@@ -58,7 +60,7 @@ Say:
 
 > "Here is a duplicate payment. The resolver classified it as `DUPLICATE_PAYMENT`, the policy selected `REFUND_DUPLICATE`, and the AI drafted recovery copy for the customer. But notice the safety gate: `S09_DRY_RUN` blocked money movement. No money moved."
 
-> "Here is a contradictory case. The resolver escalated it to `HUMAN_REVIEW`. The AI summarizes the signals for the human reviewer. The safety gate vetoed any automated action."
+> "Here is a contradictory case. The resolver escalated it to `HUMAN_REVIEW`. The AI summarizes the signals for the human reviewer. Because the evidence is ambiguous, the system does not authorize an automated money-moving action."
 
 ## 1:20–2:15 — Problem and insight
 
@@ -76,23 +78,6 @@ Point to:
 - safety gate,
 - execution boundary,
 - audit trail.
-
-## 1:20–2:15 — Ambiguous case
-
-Show a synthetic scenario with:
-
-- duplicate/late/contradictory payment evidence,
-- the resolved state,
-- the reason,
-- the bounded intervention.
-
-Say:
-
-> "Notice that the AI is not deciding the action. The action is already constrained by deterministic policy."
-
-For a risky case:
-
-> "When the evidence violates a safety invariant, the system fails closed and escalates to human review."
 
 ## 2:15–3:10 — Safety
 
