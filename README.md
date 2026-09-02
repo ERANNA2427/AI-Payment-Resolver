@@ -27,6 +27,19 @@ AI Payment Resolver turns messy, delayed, duplicated, contradictory payment even
 
 ---
 
+## 🎥 4K Demo Video
+
+Watch the complete 5:17 competition demonstration of AI-Payment-Resolver.
+
+**▶ [Watch the 4K Competition Demo](https://drive.google.com/file/d/1ajgVmXaYCO-b-EOuyuFwAiTdTHaLQBrN/view?usp=sharing)**
+
+- Duration: 5:17
+- Resolution: 4K
+- Data: Synthetic payment scenarios
+- Execution: Dry-run only
+
+---
+
 ## For merchants: what this solves
 
 You run an online business. Your customers pay using cards, UPI, wallets, or net banking. Most payments succeed, but some become ambiguous: a duplicate capture, a payment stuck in pending, a mismatch between the order amount and the gateway report, or a refund that needs validation.
